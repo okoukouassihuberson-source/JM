@@ -4,6 +4,9 @@ import { ToastProvider } from "@/components/ui/Toast";
 import { getSettings } from "@/lib/settings";
 import { displayPhone, normalizePhone } from "@/lib/format";
 
+// Tout le site dépend de la base (catalogue, paramètres, session) : rendu à la demande, jamais au build.
+export const dynamic = "force-dynamic";
+
 const SITE = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/$/, "");
 
 export async function generateMetadata(): Promise<Metadata> {
