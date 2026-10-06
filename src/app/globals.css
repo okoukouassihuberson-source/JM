@@ -1,0 +1,63 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter/index.css";
+@import "@fontsource/barlow-condensed/latin-700.css";
+@import "@fontsource/barlow-condensed/latin-800.css";
+
+/* ====== Design system JM Poissonnerie (tiré des affiches) ====== */
+@theme {
+  --color-navy-950: #050d2e;
+  --color-navy-900: #0a1a52;
+  --color-navy-800: #0d2370;
+  --color-navy-700: #12318f;
+  --color-navy-600: #1745b8;
+  --color-electric-500: #1e6bff;
+  --color-electric-400: #3f8bff;
+  --color-electric-300: #7db3ff;
+  --color-electric-100: #e3eeff;
+  --color-electric-50: #f1f6ff;
+  --color-ice: #f4f8fd;
+  --color-ink: #0b1437;
+  --color-muted: #5b6785;
+  --color-line: #dde5f2;
+  --color-promo-600: #d91f26;
+  --color-promo-500: #ee2b33;
+  --color-promo-50: #fff0f0;
+  --color-success-600: #15803d;
+  --color-success-50: #ecfdf3;
+  --color-warning-600: #c2610c;
+  --color-warning-50: #fff6e8;
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Barlow Condensed", "Inter Variable", ui-sans-serif, sans-serif;
+  --shadow-card: 0 1px 2px rgb(10 26 82 / 0.06), 0 8px 24px -12px rgb(10 26 82 / 0.18);
+  --shadow-pop: 0 20px 50px -20px rgb(10 26 82 / 0.45);
+  --animate-rise: rise 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-pulse-ring: pulse-ring 2s ease-out infinite;
+  --animate-fade: fade 0.25s ease both;
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+  @keyframes pulse-ring { 0% { box-shadow: 0 0 0 0 rgb(30 107 255 / 0.5); } 100% { box-shadow: 0 0 0 14px rgb(30 107 255 / 0); } }
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+}
+
+html { -webkit-tap-highlight-color: transparent; scroll-behavior: smooth; }
+body { background: var(--color-ice); color: var(--color-ink); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+:focus-visible { outline: 3px solid var(--color-electric-400); outline-offset: 2px; border-radius: 6px; }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+
+@utility btn { @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold tracking-wide transition active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50; }
+@utility btn-primary { @apply btn bg-electric-500 text-white shadow-[0_8px_20px_-8px_rgb(30_107_255/0.7)] hover:bg-electric-400; }
+@utility btn-navy { @apply btn bg-navy-900 text-white hover:bg-navy-700; }
+@utility btn-outline { @apply btn border-2 border-navy-900/15 bg-white text-navy-900 hover:border-electric-500 hover:text-electric-500; }
+@utility btn-ghost { @apply btn text-navy-900 hover:bg-electric-50; }
+@utility btn-promo { @apply btn bg-promo-600 text-white hover:bg-promo-500; }
+@utility btn-danger { @apply btn border-2 border-promo-600/30 bg-white text-promo-600 hover:bg-promo-50; }
+@utility btn-sm { @apply min-h-9 rounded-lg px-3 py-1.5 text-xs; }
+@utility btn-lg { @apply min-h-13 px-7 text-base; }
+@utility card { @apply rounded-2xl border border-line bg-white shadow-card; }
+@utility input { @apply min-h-11 w-full rounded-xl border border-line bg-white px-3.5 py-2 text-[15px] text-ink placeholder:text-muted/60 focus:border-electric-500 focus:outline-none focus:ring-4 focus:ring-electric-500/15; }
+@utility label { @apply mb-1.5 block text-xs font-bold uppercase tracking-wider text-navy-800; }
+@utility badge { @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide; }
+@utility h-display { font-family: var(--font-display); @apply font-extrabold uppercase leading-[0.95] tracking-tight; }
+@utility th { @apply whitespace-nowrap px-3 py-2.5 text-left text-[11px] font-bold uppercase tracking-wider text-muted; }
+@utility td { @apply px-3 py-3 align-middle text-sm; }
