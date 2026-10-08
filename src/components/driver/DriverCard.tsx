@@ -29,7 +29,7 @@ export function DriverCard({ d }: { d: any }) {
       <details className="text-sm"><summary className="cursor-pointer font-bold text-navy-900">Contenu ({d.items.length})</summary>
         <ul className="mt-2 space-y-1 text-muted">{d.items.map((i: any, k: number) => <li key={k}>• {i.name} — {formatQty(i.quantity, i)}</li>)}</ul></details>
 
-      {st === "preparing" && <p className="rounded-xl bg-slate-100 p-3 text-center text-sm font-semibold text-muted">En attente de la remise de la commande par la boutique.</p>}
+      {!["handed_to_driver", "out_for_delivery"].includes(st) && <p className="rounded-xl bg-slate-100 p-3 text-center text-sm font-semibold text-muted">Commande assignée : en attente de sa préparation et de sa remise par la boutique.</p>}
       {!accepted && <ActionButton action={() => acceptAction(d.order_id)} className="btn-primary btn-lg w-full">ACCEPTER</ActionButton>}
       {accepted && st === "handed_to_driver" && <ActionButton action={() => enRouteAction(d.order_id)} className="btn-navy btn-lg w-full"><Icon name="nav" /> JE SUIS EN ROUTE</ActionButton>}
       {st === "out_for_delivery" && mode === "" && (

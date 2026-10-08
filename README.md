@@ -67,9 +67,16 @@ Tout le catalogue (catégories, produits, unités, prix, promotions, photos), le
 | `NEXT_PUBLIC_SITE_URL` | URL publique (SEO, sitemap, retour de paiement) |
 | `UPLOAD_DIR` | dossier des photos téléversées (volume persistant en production) |
 | `DEFAULT_COUNTRY_CODE` | indicatif par défaut pour les numéros locaux (défaut `225`) |
+| `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` | notifications push (livreurs, clients, équipe) — générer avec `npx web-push generate-vapid-keys` |
 | `CINETPAY_API_KEY`, `CINETPAY_SITE_ID` | **à renseigner ici** pour activer le paiement en ligne |
 
 URL de notification CinetPay à déclarer dans leur tableau de bord : `https://VOTRE-DOMAINE/api/payments/cinetpay`.
+
+## Notifications
+
+* **Dans l'application** : cloche avec pastille, alerte immédiate (son, vibration, message) quand une notification arrive page ouverte, rafraîchissement automatique des livraisons.
+* **Sur le téléphone, même verrouillé** (Web Push) : le livreur, le client ou l'équipe appuie sur « Activer les alertes ». Il faut définir les 3 variables `VAPID_*` (sans elles, seules les alertes dans l'application fonctionnent). Android : Chrome. iPhone : ouvrir le site dans Safari → Partager → *Sur l'écran d'accueil*, puis activer les alertes depuis l'icône.
+* Base : exécuter `db/migrations/004_push.sql` (Supabase : fichier `db/supabase/14-push.sql`).
 
 ## Sécurité
 

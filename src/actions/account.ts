@@ -105,5 +105,6 @@ export async function markNotificationsReadAction(id?: string): Promise<ActionSt
   await query("update notifications set read_at = now() where user_id = $1 and read_at is null and ($2::uuid is null or id = $2)", [u.id, id ?? null]);
   revalidatePath("/mon-espace", "layout");
   revalidatePath("/admin", "layout");
+  revalidatePath("/livreur", "layout");
   return { ok: true };
 }
