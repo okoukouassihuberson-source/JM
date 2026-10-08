@@ -1,18 +1,21 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { usePathname } from "next/navigation";
 import { Icon } from "../ui/Icon";
 
 export function MobileMenu({ user, categories, nav, logout }: { user: { name: string; home: string } | null; categories: { slug: string; name: string }[]; nav: { href: string; label: string }[]; logout: () => Promise<void> }) {
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   const path = usePathname();
   useEffect(() => setOpen(false), [path]);
   useEffect(() => { document.body.style.overflow = open ? "hidden" : ""; return () => { document.body.style.overflow = ""; }; }, [open]);
   return (
     <div className="lg:hidden">
       <button type="button" onClick={() => setOpen(true)} className="grid size-11 place-items-center rounded-full text-navy-900 hover:bg-electric-50" aria-label="Ouvrir le menu" aria-expanded={open}><Icon name="menu" size={24} /></button>
-      {open && (
+      {open && mounted && createPortal(
         <div className="fixed inset-0 z-[90] animate-fade" role="dialog" aria-modal="true" aria-label="Menu">
           <button className="absolute inset-0 bg-navy-950/60" aria-label="Fermer le menu" onClick={() => setOpen(false)} />
           <aside className="absolute inset-y-0 left-0 flex w-[84%] max-w-sm flex-col gap-1 overflow-y-auto bg-white p-4 shadow-pop">
@@ -33,7 +36,8 @@ export function MobileMenu({ user, categories, nav, logout }: { user: { name: st
               </>)}
             </div>
           </aside>
-        </div>
+        </div>,
+        document.body,
       )}
     </div>
   );
