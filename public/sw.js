@@ -1,6 +1,19 @@
 /* Service worker JM Poissonnerie : réception des notifications push (téléphone verrouillé / site fermé). */
-self.addEventListener("install", () => self.skipWaiting());
-self.addEventListener("activate", (e) => e.waitUntil(self.clients.claim()));
+const CACHE = "jm-shell-v1";
+const SHELL = ["/offline.html", "/icons/icon-192.png"];
+self.addEventListener("install", (e) => {
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).catch(() => {}).then(() => self.skipWaiting()));
+});
+self.addEventListener("activate", (e) => {
+  e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== CACHE).map((k) => caches.delete(k)))).then(() => self.clients.claim()));
+});
+
+// Pages : toujours le réseau (données fraîches) ; page « hors connexion » seulement si le réseau est coupé.
+self.addEventListener("fetch", (event) => {
+  const req = event.request;
+  if (req.method !== "GET" || req.mode !== "navigate") return;
+  event.respondWith(fetch(req).catch(() => caches.match("/offline.html")));
+});
 
 self.addEventListener("push", (event) => {
   let d = {};

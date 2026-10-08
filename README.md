@@ -78,6 +78,10 @@ URL de notification CinetPay à déclarer dans leur tableau de bord : `https://V
 * **Sur le téléphone, même verrouillé** (Web Push) : le livreur, le client ou l'équipe appuie sur « Activer les alertes ». Il faut définir les 3 variables `VAPID_*` (sans elles, seules les alertes dans l'application fonctionnent). Android : Chrome. iPhone : ouvrir le site dans Safari → Partager → *Sur l'écran d'accueil*, puis activer les alertes depuis l'icône.
 * Base : exécuter `db/migrations/004_push.sql` (Supabase : fichier `db/supabase/14-push.sql`).
 
+## Application installable (PWA)
+
+Dès l'arrivée sur le site, une bannière propose « Installer JM Poissonnerie » : Android/Chrome/Edge/desktop → bouton **Installer** (invite native) ; iPhone (Safari) → rappel « Partager → Sur l'écran d'accueil ». Si le visiteur refuse, la proposition revient après 3 jours ; elle disparaît une fois installée. Manifeste : `src/app/manifest.ts` ; service worker : `public/sw.js` (notifications push + page hors connexion `public/offline.html`). L'installation exige HTTPS (Vercel : ok).
+
 ## Sécurité
 
 * **Droits côté serveur** : table `roles` (permissions en base) ; **chaque** server action / route API appelle `requirePerm(...)`. Masquer un bouton n'est jamais la seule protection (testé en E2E). Sessions en base (jeton aléatoire haché SHA-256, cookie `httpOnly`, `sameSite=lax`, `secure` en prod) révocables.

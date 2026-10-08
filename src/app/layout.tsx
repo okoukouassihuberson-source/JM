@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { ToastProvider } from "@/components/ui/Toast";
+import { PwaInstall } from "@/components/PwaInstall";
 import { getSettings } from "@/lib/settings";
 import { displayPhone, normalizePhone } from "@/lib/format";
 
@@ -22,7 +23,8 @@ export async function generateMetadata(): Promise<Metadata> {
     twitter: { card: "summary_large_image", title: s.seo.title, description: s.seo.description },
     alternates: { canonical: "/" },
     robots: { index: true, follow: true },
-    icons: { icon: "/icon.png", apple: "/icon.png" },
+    icons: { icon: "/icon.png", apple: "/icons/apple-touch-icon.png" },
+    appleWebApp: { capable: true, title: s.brand.name, statusBarStyle: "black-translucent" },
   };
 }
 
@@ -50,6 +52,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld).replace(/</g, "\\u003c") }} />
         <ToastProvider>{children}</ToastProvider>
+        <PwaInstall />
         <span className="sr-only">{displayPhone(phone ?? s.contact.phone)}</span>
       </body>
     </html>
