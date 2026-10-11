@@ -66,7 +66,8 @@ Tout le catalogue (catégories, produits, unités, prix, promotions, photos), le
 | `DATABASE_URL` | connexion PostgreSQL (Supabase : *Settings → Database*) |
 | `DATABASE_SSL` | `true` si la base exige SSL |
 | `NEXT_PUBLIC_SITE_URL` | URL publique (SEO, sitemap, retour de paiement) |
-| `UPLOAD_DIR` | dossier des photos téléversées (volume persistant en production) |
+| `UPLOAD_DIR` | dossier des photos téléversées (volume persistant ; ignoré si Supabase Storage est configuré) |
+| `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_BUCKET` | photos dans **Supabase Storage** (recommandé sur Vercel, où le disque est éphémère). Clé `service_role` = secrète, côté serveur uniquement. Le bucket (`jm-media` par défaut, public, WebP) est créé automatiquement. |
 | `DEFAULT_COUNTRY_CODE` | indicatif par défaut pour les numéros locaux (défaut `225`) |
 | `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` | notifications push (livreurs, clients, équipe) — générer avec `npx web-push generate-vapid-keys` |
 | `CINETPAY_API_KEY`, `CINETPAY_SITE_ID` | **à renseigner ici** pour activer le paiement en ligne |

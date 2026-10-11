@@ -1,5 +1,8 @@
 import type { NextConfig } from "next";
 
+// Hôte Supabase Storage (images téléversées) : autorisé dans la CSP et pour next/image.
+const supabaseHost = (() => { try { return process.env.SUPABASE_URL ? new URL(process.env.SUPABASE_URL).host : null; } catch { return null; } })();
+
 const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "X-Frame-Options", value: "SAMEORIGIN" },
@@ -9,7 +12,7 @@ const securityHeaders = [
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'",
-      "img-src 'self' data: blob:",
+      `img-src 'self' data: blob:${supabaseHost ? ` https://${supabaseHost}` : ""}`,
       "style-src 'self' 'unsafe-inline'",
       "script-src 'self' 'unsafe-inline'" + (process.env.NODE_ENV === "production" ? "" : " 'unsafe-eval'"),
       "font-src 'self' data:",
@@ -27,6 +30,7 @@ const config: NextConfig = {
   poweredByHeader: false,
   images: {
     formats: ["image/avif", "image/webp"],
+    remotePatterns: supabaseHost ? [{ protocol: "https", hostname: supabaseHost, pathname: "/storage/v1/object/public/**" }] : [],
     qualities: [60, 75],
     deviceSizes: [360, 640, 828, 1080, 1280, 1600],
   },
