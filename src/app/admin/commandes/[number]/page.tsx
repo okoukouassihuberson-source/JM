@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { updateOrderInfoAction } from "@/actions/admin-orders";
+import { decideInstallmentAction, updateOrderInfoAction } from "@/actions/admin-orders";
 import { AutoRefresh } from "@/components/AutoRefresh";
 import { OrderTimeline } from "@/components/OrderTimeline";
 import { OrderActions } from "@/components/admin/OrderActions";
-import { ActionForm, Submit } from "@/components/ui/ActionForm";
+import { ActionButton, ActionForm, Submit } from "@/components/ui/ActionForm";
 import { Icon } from "@/components/ui/Icon";
 import { query } from "@/db";
 import { can, requirePage } from "@/lib/auth";
@@ -20,7 +20,7 @@ export default async function AdminOrder({ params }: { params: Promise<{ number:
   const u = await requirePage("orders.view", `/admin/commandes/${number}`);
   const d = await getOrderDetail(number);
   if (!d) notFound();
-  const { order: o, items, payment, delivery, history, invoice, customer } = d;
+  const { order: o, items, payment, delivery, history, invoice, customer, installments } = d;
   const drivers = await query<any>("select dr.id, u.first_name || ' ' || u.last_name as name, dr.status from drivers dr join users u on u.id = dr.user_id where u.active order by u.first_name");
   const st = o.status as OrderStatus;
   const pickup = o.delivery_method === "pickup";
@@ -55,7 +55,27 @@ export default async function AdminOrder({ params }: { params: Promise<{ number:
                 <div className="sm:col-span-2"><Submit className="btn-primary btn-sm">Enregistrer</Submit></div></ActionForm></details>)}
         </div>
         <aside className="space-y-5">
-          {canAct && <section className="card p-5"><h2 className="h-display mb-3 text-2xl text-navy-900">Actions</h2><OrderActions o={{ id: o.id, status: st, pickup, cod: o.payment_method === "cash_on_delivery", paid: payment?.status === "paid", driverId: delivery?.driver_id ?? null }} drivers={drivers} /></section>}
+          <section className="card space-y-3 p-5">
+            <h2 className="h-display text-2xl text-navy-900">Versements</h2>
+            <p className="text-sm">Payé : <b className="text-success-600">{fcfa(o.amount_paid)}</b> / {fcfa(o.total)} · Reste : <b>{fcfa(Math.max(0, o.total - o.amount_paid))}</b></p>
+            {installments.length === 0 ? <p className="text-sm text-muted">Aucun versement déclaré.</p> : (
+              <ul className="space-y-2 text-sm">
+                {installments.map((i: any) => (
+                  <li key={i.id} className="rounded-xl border border-line p-3">
+                    <div className="flex items-center justify-between gap-2"><b>{fcfa(i.amount)}</b><span className={`badge ${i.status === "approved" ? "bg-success-50 text-success-600" : i.status === "rejected" ? "bg-promo-50 text-promo-600" : "bg-warning-50 text-warning-600"}`}>{i.status === "approved" ? "Approuvé" : i.status === "rejected" ? "Refusé" : "À approuver"}</span></div>
+                    <p className="text-xs text-muted">{fmtDateTime(i.created_at)} · {i.reference ? `réf. ${i.reference}` : "sans référence"}</p>
+                    {i.status === "pending" && can(u, "payments.manage") && st !== "cancelled" && (
+                      <div className="mt-2 flex gap-2">
+                        <ActionButton action={decideInstallmentAction} args={[i.id, true]} className="btn-primary btn-sm">Approuver</ActionButton>
+                        <ActionButton action={decideInstallmentAction} args={[i.id, false]} className="btn-danger btn-sm" confirm="Refuser ce versement ?">Refuser</ActionButton>
+                      </div>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+          {canAct && <section className="card p-5"><h2 className="h-display mb-3 text-2xl text-navy-900">Actions</h2><OrderActions o={{ id: o.id, status: st, pickup, cod: o.payment_method === "cash_on_delivery", paid: payment?.status === "paid", partial: o.amount_paid > 0, driverId: delivery?.driver_id ?? null }} drivers={drivers} /></section>}
           {!pickup && o.delivery_code && <section className="card p-5 text-center"><p className="label">Code de livraison</p><p className="h-display text-4xl tracking-[0.3em] text-navy-900">{o.delivery_code}</p></section>}
           <section className="card p-5"><h2 className="h-display mb-4 text-2xl text-navy-900">Historique</h2><OrderTimeline status={st} history={history} pickup={pickup} cod={o.payment_method === "cash_on_delivery"} />
             <ul className="mt-4 space-y-1.5 border-t border-line pt-3 text-xs text-muted">{history.slice().reverse().map((h: any) => <li key={h.id}><b>{fmtDateTime(h.created_at)}</b> — {STATUS_LABEL[h.status as OrderStatus]}{h.note ? ` · ${h.note}` : ""}{h.first_name ? ` (${h.first_name})` : ""}</li>)}</ul></section>

@@ -56,6 +56,7 @@ Tout le catalogue (catégories, produits, unités, prix, promotions, photos), le
 * **Livraison** : zones & tarifs administrables (+ supplément express, seuil de gratuité), code de livraison à 4 chiffres remis au livreur, preuve (photo + commentaire), échec avec motif, GPS temps réel **optionnel** (le livreur active le partage ; le client déclenche l'affichage de la carte → aucune donnée consommée par défaut).
 * **Authentification** : téléphone + mot de passe, **sans OTP**. Mots de passe hashés *scrypt* salés. « Mot de passe oublié » sans SMS : le client demande, le gérant génère un code à 6 chiffres à usage unique (valable 1 h) depuis *Clients & équipe* et le lui transmet (appel/WhatsApp).
 * **Paiement** : paiement à la livraison, Mobile Money manuel (le client indique sa référence, le gérant confirme), et **CinetPay** (Orange Money, MTN, Moov, Wave, cartes) prêt à l'emploi : renseigner les clés (voir ci-dessous). Le webhook ne fait jamais confiance au corps reçu : il re-vérifie la transaction auprès de CinetPay.
+* **Paiement partiel** : en Mobile Money, le client choisit librement le montant versé (à la commande, puis autant de versements qu'il veut depuis sa commande, avec la référence de chaque transaction). Rien ne compte tant que l'admin (permission `payments.manage`) n'a pas **approuvé ou refusé** le versement ; la commande peut être préparée dès qu'un versement est approuvé, et le livreur encaisse le **reste** à la livraison. Quand le total est atteint, le paiement passe à « Payé » automatiquement. Base : `db/migrations/005_partial_payments.sql` (Supabase : `db/supabase/15-paiements-partiels.sql`).
 * **Facture** : générée à chaque commande (numéro `F-AAAA-000001`, instantané immuable), PDF téléchargeable côté client et gérant.
 
 ## Variables d'environnement
@@ -67,9 +68,20 @@ Tout le catalogue (catégories, produits, unités, prix, promotions, photos), le
 | `NEXT_PUBLIC_SITE_URL` | URL publique (SEO, sitemap, retour de paiement) |
 | `UPLOAD_DIR` | dossier des photos téléversées (volume persistant en production) |
 | `DEFAULT_COUNTRY_CODE` | indicatif par défaut pour les numéros locaux (défaut `225`) |
+| `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` | notifications push (livreurs, clients, équipe) — générer avec `npx web-push generate-vapid-keys` |
 | `CINETPAY_API_KEY`, `CINETPAY_SITE_ID` | **à renseigner ici** pour activer le paiement en ligne |
 
 URL de notification CinetPay à déclarer dans leur tableau de bord : `https://VOTRE-DOMAINE/api/payments/cinetpay`.
+
+## Notifications
+
+* **Dans l'application** : cloche avec pastille, alerte immédiate (son, vibration, message) quand une notification arrive page ouverte, rafraîchissement automatique des livraisons.
+* **Sur le téléphone, même verrouillé** (Web Push) : le livreur, le client ou l'équipe appuie sur « Activer les alertes ». Il faut définir les 3 variables `VAPID_*` (sans elles, seules les alertes dans l'application fonctionnent). Android : Chrome. iPhone : ouvrir le site dans Safari → Partager → *Sur l'écran d'accueil*, puis activer les alertes depuis l'icône.
+* Base : exécuter `db/migrations/004_push.sql` (Supabase : fichier `db/supabase/14-push.sql`).
+
+## Application installable (PWA)
+
+Dès l'arrivée sur le site, une bannière propose « Installer JM Poissonnerie » : Android/Chrome/Edge/desktop → bouton **Installer** (invite native) ; iPhone (Safari) → rappel « Partager → Sur l'écran d'accueil ». Si le visiteur refuse, la proposition revient après 3 jours ; elle disparaît une fois installée. Manifeste : `src/app/manifest.ts` ; service worker : `public/sw.js` (notifications push + page hors connexion `public/offline.html`). L'installation exige HTTPS (Vercel : ok).
 
 ## Sécurité
 

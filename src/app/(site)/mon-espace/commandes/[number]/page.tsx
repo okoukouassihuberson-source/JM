@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { cancelOrderAction, submitPaymentRefAction } from "@/actions/account";
+import { cancelOrderAction, declarePaymentAction, submitPaymentRefAction } from "@/actions/account";
 import { AutoRefresh } from "@/components/AutoRefresh";
 import { LiveTracker } from "@/components/LiveTracker";
 import { OrderTimeline } from "@/components/OrderTimeline";
@@ -24,7 +24,7 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
   const u = await requireUser(`/mon-espace/commandes/${number}`);
   const d = await getOrderDetail(number, u.id);
   if (!d) notFound();
-  const { order: o, items, payment, delivery, history, invoice } = d;
+  const { order: o, items, payment, delivery, history, invoice, installments } = d;
   const s = await getSettings();
   const isNew = (await searchParams).nouveau === "1";
   const st = o.status as OrderStatus;
@@ -33,6 +33,10 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
   const cod = o.payment_method === "cash_on_delivery";
   const showCode = !pickup && ["preparing", "handed_to_driver", "out_for_delivery"].includes(st) && o.delivery_code;
   const unpaid = payment && payment.status === "pending" && st !== "cancelled";
+  const due = Math.max(0, o.total - o.amount_paid);
+  const canPay = due > 0 && s.payment.mobile_money_manual && !["cancelled", "delivered", "delivery_failed"].includes(st) && o.payment_method !== "online";
+  const awaiting = installments.filter((i: any) => i.status === "pending").reduce((t: number, i: any) => t + i.amount, 0);
+  const needsRef = unpaid && o.payment_method === "mobile_money" && !payment?.reference && installments.some((i: any) => i.status === "pending" && !i.reference);
 
   return (
     <div className="space-y-5">
@@ -115,14 +119,41 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
           <section className="card space-y-3 p-5">
             <h2 className="h-display text-2xl text-navy-900">Paiement</h2>
             <p className="flex items-center justify-between text-sm"><span className="text-muted">{PAYMENT_LABEL[o.payment_method]}</span><span className={`badge ${payment?.status === "paid" ? "bg-success-50 text-success-600" : payment?.status === "failed" ? "bg-promo-50 text-promo-600" : "bg-warning-50 text-warning-600"}`}>{PAY_STATUS_LABEL[payment?.status ?? "pending"]}</span></p>
-            {unpaid && o.payment_method === "mobile_money" && (
-              <div className="space-y-3 rounded-2xl bg-electric-50 p-4 text-sm">
-                <p className="font-bold">Envoyez {fcfa(o.total)} à :</p><p className="whitespace-pre-line">{s.payment.mobile_money_numbers}</p>
-                <ActionForm action={submitPaymentRefAction.bind(null, o.number)} className="space-y-2">
-                  <label className="label" htmlFor="ref">Référence de transaction</label>
-                  <input id="ref" name="reference" defaultValue={payment?.reference ?? ""} className="input" maxLength={40} required />
-                  <Submit className="btn-primary btn-sm w-full">Envoyer la référence</Submit>
+            <dl className="space-y-1 rounded-2xl bg-electric-50 p-4 text-sm">
+              <div className="flex justify-between"><dt className="text-muted">Total</dt><dd className="font-bold">{fcfa(o.total)}</dd></div>
+              <div className="flex justify-between"><dt className="text-muted">Déjà payé (approuvé)</dt><dd className="font-bold text-success-600">{fcfa(o.amount_paid)}</dd></div>
+              {awaiting > 0 && <div className="flex justify-between"><dt className="text-muted">En attente d&apos;approbation</dt><dd className="font-bold text-warning-600">{fcfa(awaiting)}</dd></div>}
+              <div className="flex justify-between border-t border-line pt-1.5"><dt className="font-extrabold">Reste à payer</dt><dd className="font-black">{fcfa(due)}</dd></div>
+            </dl>
+            {installments.length > 0 && (
+              <ul className="space-y-1.5 text-sm">
+                {installments.map((i: any) => (
+                  <li key={i.id} className="flex items-center justify-between gap-2 rounded-xl border border-line px-3 py-2">
+                    <span><b>{fcfa(i.amount)}</b><span className="block text-xs text-muted">{fmtDateTime(i.created_at)}{i.reference ? ` · réf. ${i.reference}` : ""}</span></span>
+                    <span className={`badge ${i.status === "approved" ? "bg-success-50 text-success-600" : i.status === "rejected" ? "bg-promo-50 text-promo-600" : "bg-warning-50 text-warning-600"}`}>{i.status === "approved" ? "Approuvé" : i.status === "rejected" ? "Refusé" : "En attente"}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {needsRef && (
+              <ActionForm action={submitPaymentRefAction.bind(null, o.number)} className="space-y-2 rounded-2xl bg-warning-50 p-4 text-sm">
+                <label className="label" htmlFor="ref">Référence de votre paiement</label>
+                <input id="ref" name="reference" className="input" maxLength={40} required />
+                <Submit className="btn-primary btn-sm w-full">Envoyer la référence</Submit>
+              </ActionForm>
+            )}
+            {canPay && (
+              <div className="space-y-3 rounded-2xl border-2 border-electric-200 p-4 text-sm">
+                <p className="font-bold">Payer le montant de votre choix (jusqu&apos;à {fcfa(due)})</p>
+                <p className="whitespace-pre-line text-muted">Envoyez par Mobile Money à :{"\n"}{s.payment.mobile_money_numbers}</p>
+                <ActionForm action={declarePaymentAction.bind(null, o.number)} className="space-y-2">
+                  <label className="label" htmlFor="amount">Montant versé (FCFA)</label>
+                  <input id="amount" name="amount" type="number" inputMode="numeric" min={1} max={due} step={1} defaultValue={due} className="input" required />
+                  <label className="label" htmlFor="ref2">Référence de la transaction</label>
+                  <input id="ref2" name="reference" className="input" maxLength={40} placeholder="Ex : MP260906.1234.A56789" required />
+                  <Submit className="btn-primary btn-sm w-full">Envoyer pour approbation</Submit>
                 </ActionForm>
+                <p className="text-xs text-muted">Le versement compte une fois approuvé par la boutique.</p>
               </div>
             )}
             {unpaid && o.payment_method === "online" && cinetpayConfigured() && <PayOnline number={o.number} />}

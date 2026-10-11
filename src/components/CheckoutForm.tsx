@@ -130,10 +130,11 @@ export function CheckoutForm({ user, cart, zones, addresses, opts }: Props) {
           ))}
           {pay === "mobile_money" && (
             <div className="space-y-3 rounded-2xl bg-electric-50 p-4 text-sm">
-              <p className="font-bold text-navy-900">Envoyez <span className="text-electric-500">{fcfa(total)}</span> à :</p>
+              <p className="font-bold text-navy-900">Envoyez le montant de votre choix (jusqu&apos;à <span className="text-electric-500">{fcfa(total)}</span>) à :</p>
               <p className="whitespace-pre-line font-semibold">{opts.momoInfo}</p>
+              <div><label className="label" htmlFor="payAmount">Montant que je verse maintenant (FCFA)</label><input id="payAmount" name="payAmount" type="number" inputMode="numeric" min={1} max={total} step={1} defaultValue={total} className="input" /><p className="mt-1 text-xs text-muted">Vous pouvez payer en une ou plusieurs fois. Chaque versement est approuvé par la boutique ; vous pourrez compléter depuis votre commande.</p></div>
               <div><label className="label" htmlFor="ref">Référence de la transaction (facultatif maintenant)</label><input id="ref" name="paymentReference" className="input" maxLength={40} placeholder="Ex : MP260906.1234.A56789" /></div>
-              <p className="text-xs text-muted">Votre commande sera préparée dès confirmation de la réception du paiement.</p>
+              <p className="text-xs text-muted">La préparation commence dès que la boutique a approuvé votre (premier) versement.</p>
             </div>
           )}
           {pay !== "mobile_money" && <input type="hidden" name="paymentReference" value="" />}

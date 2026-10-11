@@ -95,7 +95,8 @@ export async function requirePerm(...perms: string[]): Promise<SessionUser> {
 
 export function landingFor(u: SessionUser): string {
   if (u.role_key === "client") return "/mon-espace";
-  if (can(u, "driver.access")) return "/livreur";
+  // L'espace livreur est réservé au rôle « livreur » : le super admin a tous les droits (« * ») mais atterrit sur /admin.
+  if (u.role_key === "driver") return "/livreur";
   if (can(u, "dashboard.view")) return "/admin";
   if (can(u, "orders.view")) return "/admin/commandes";
   if (can(u, "stock.view")) return "/admin/stock";

@@ -9,7 +9,8 @@ export function DriverCard({ d }: { d: any }) {
   const [mode, setMode] = useState<"" | "deliver" | "fail">("");
   const st = d.order_status as string;
   const accepted = !!d.accepted_at;
-  const toCollect = d.payment_method === "cash_on_delivery" && d.pay_status !== "paid";
+  const due = Math.max(0, d.total - (d.amount_paid ?? 0));
+  const toCollect = due > 0 && d.pay_status !== "paid" && (d.payment_method === "cash_on_delivery" || d.amount_paid > 0);
   return (
     <article className="card space-y-4 border-2 border-navy-900/10 p-4">
       <header className="flex items-start justify-between gap-2">
@@ -23,13 +24,13 @@ export function DriverCard({ d }: { d: any }) {
         {d.instructions && <div className="flex gap-3 rounded-xl bg-warning-50 p-3 text-sm"><Icon name="info" className="mt-0.5 shrink-0 text-warning-600" /><dd><b>Instructions :</b> {d.instructions}</dd></div>}
       </dl>
       <div className="flex items-center justify-between rounded-xl bg-electric-50 p-3">
-        <div><p className="text-xs font-bold uppercase text-muted">Montant</p><p className="h-display text-3xl text-navy-900" style={{ textTransform: "none" }}>{fcfa(d.total)}</p></div>
+        <div><p className="text-xs font-bold uppercase text-muted">{toCollect && d.amount_paid > 0 ? "Reste à encaisser" : "Montant"}</p><p className="h-display text-3xl text-navy-900" style={{ textTransform: "none" }}>{fcfa(toCollect ? due : d.total)}</p>{toCollect && d.amount_paid > 0 && <p className="text-xs text-muted">Déjà payé : {fcfa(d.amount_paid)} sur {fcfa(d.total)}</p>}</div>
         <span className={`badge ${toCollect ? "bg-promo-600 text-white" : "bg-success-50 text-success-600"}`}>{toCollect ? "À encaisser" : "Déjà payé"}</span>
       </div>
       <details className="text-sm"><summary className="cursor-pointer font-bold text-navy-900">Contenu ({d.items.length})</summary>
         <ul className="mt-2 space-y-1 text-muted">{d.items.map((i: any, k: number) => <li key={k}>• {i.name} — {formatQty(i.quantity, i)}</li>)}</ul></details>
 
-      {st === "preparing" && <p className="rounded-xl bg-slate-100 p-3 text-center text-sm font-semibold text-muted">En attente de la remise de la commande par la boutique.</p>}
+      {!["handed_to_driver", "out_for_delivery"].includes(st) && <p className="rounded-xl bg-slate-100 p-3 text-center text-sm font-semibold text-muted">Commande assignée : en attente de sa préparation et de sa remise par la boutique.</p>}
       {!accepted && <ActionButton action={() => acceptAction(d.order_id)} className="btn-primary btn-lg w-full">ACCEPTER</ActionButton>}
       {accepted && st === "handed_to_driver" && <ActionButton action={() => enRouteAction(d.order_id)} className="btn-navy btn-lg w-full"><Icon name="nav" /> JE SUIS EN ROUTE</ActionButton>}
       {st === "out_for_delivery" && mode === "" && (
@@ -45,7 +46,7 @@ export function DriverCard({ d }: { d: any }) {
           <div><label className="label">Code donné par le client</label><input name="code" inputMode="numeric" maxLength={4} className="input text-center text-3xl font-black tracking-[0.5em]" placeholder="••••" autoComplete="off" /></div>
           <div><label className="label">Photo de preuve (facultatif)</label><input type="file" name="photo" accept="image/jpeg,image/png,image/webp" capture="environment" className="input !py-2 text-sm" /></div>
           <div><label className="label">Commentaire</label><input name="comment" maxLength={300} className="input" placeholder="Remis en main propre…" /></div>
-          {toCollect && <p className="rounded-xl bg-promo-50 p-3 text-sm font-bold text-promo-600">N&apos;oubliez pas d&apos;encaisser {fcfa(d.total)} en espèces.</p>}
+          {toCollect && <p className="rounded-xl bg-promo-50 p-3 text-sm font-bold text-promo-600">N&apos;oubliez pas d&apos;encaisser {fcfa(due)} en espèces.</p>}
           <div className="grid grid-cols-2 gap-2"><button type="button" className="btn-outline" onClick={() => setMode("")}>Retour</button><Submit className="btn-primary" pendingText="Envoi…">Valider</Submit></div>
         </ActionForm>
       )}

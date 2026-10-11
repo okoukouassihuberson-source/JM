@@ -5,7 +5,7 @@ import { one, query } from "@/db";
 import { audit } from "@/lib/audit";
 import { requirePerm } from "@/lib/auth";
 import { normalizePhone } from "@/lib/format";
-import { assignDriver, changeStatus, confirmPayment, OrderError, type OrderStatus } from "@/lib/orders";
+import { assignDriver, changeStatus, confirmPayment, decideInstallment, OrderError, type OrderStatus } from "@/lib/orders";
 import type { ActionState } from "@/components/ui/ActionForm";
 
 const uuid = z.string().uuid();
@@ -57,6 +57,15 @@ export async function confirmPaymentAction(orderId: string): Promise<ActionState
     await confirmPayment(orderId, u.id);
     await audit(u.id, "payment.confirmed", "order", orderId);
   }, "Paiement confirmé.");
+}
+
+export async function decideInstallmentAction(id: string, approve: boolean): Promise<ActionState> {
+  if (!uuid.safeParse(id).success) return { error: "Requête invalide." };
+  return guard(async () => {
+    const u = await requirePerm("payments.manage");
+    await decideInstallment(id, approve, u.id, approve ? undefined : "Référence introuvable ou montant non reçu");
+    await audit(u.id, approve ? "payment.installment.approved" : "payment.installment.rejected", "payment_installment", id);
+  }, approve ? "Versement approuvé." : "Versement refusé.");
 }
 
 export async function updateOrderInfoAction(orderId: string, _: ActionState, fd: FormData): Promise<ActionState> {

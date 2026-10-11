@@ -18,7 +18,7 @@ const schema = z.object({
   commune: z.string().trim().max(80), quartier: z.string().trim().max(100), address: z.string().trim().max(250), landmark: z.string().trim().max(150),
   deliveryPhone: z.string().trim().max(30), instructions: z.string().trim().max(300),
   paymentMethod: z.enum(["cash_on_delivery", "mobile_money", "online"]),
-  paymentReference: z.string().trim().max(40), saveAddress: z.string().optional(),
+  paymentReference: z.string().trim().max(40), payAmount: z.string().optional(), saveAddress: z.string().optional(),
 });
 
 export async function placeOrderAction(_: ActionState, fd: FormData): Promise<ActionState> {
@@ -36,7 +36,8 @@ export async function placeOrderAction(_: ActionState, fd: FormData): Promise<Ac
       userId: u.id, customerName: d.customerName, customerPhone: d.customerPhone, method: d.method, zoneId: d.method === "pickup" ? null : d.zoneId,
       commune: d.commune, quartier: d.quartier, address: d.address, landmark: d.landmark,
       deliveryPhone: normalizePhone(d.deliveryPhone) ?? d.customerPhone, instructions: d.instructions,
-      paymentMethod: d.paymentMethod, paymentReference: d.paymentReference, saveAddress: !!d.saveAddress,
+      paymentMethod: d.paymentMethod, paymentReference: d.paymentReference,
+      payAmount: d.paymentMethod === "mobile_money" && d.payAmount?.trim() ? Number(d.payAmount.replace(/[\s\u00a0]/g, "")) : null, saveAddress: !!d.saveAddress,
     }));
   } catch (e) {
     if (e instanceof OrderError) return { error: e.message };

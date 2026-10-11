@@ -60,7 +60,13 @@ export type Settings = typeof DEFAULT_SETTINGS;
 export type SettingKey = keyof Settings;
 
 export const getSettings = cache(async (): Promise<Settings> => {
-  const rows = await query<{ key: SettingKey; value: any }>("select key, value from settings");
+  let rows: { key: SettingKey; value: any }[] = [];
+  try {
+    rows = await query<{ key: SettingKey; value: any }>("select key, value from settings");
+  } catch (e) {
+    // Base indisponible (ex. build sans DATABASE_URL, panne passagère) : valeurs par défaut plutôt qu'un site en erreur.
+    console.error("getSettings: lecture impossible, valeurs par défaut utilisées —", (e as Error).message);
+  }
   const out: any = structuredClone(DEFAULT_SETTINGS);
   for (const r of rows) {
     out[r.key] = Array.isArray(out[r.key]) ? r.value : { ...out[r.key], ...r.value };

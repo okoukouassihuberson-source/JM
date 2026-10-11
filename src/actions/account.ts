@@ -4,10 +4,11 @@ import { z } from "zod";
 import { one, query } from "@/db";
 import { requireUser } from "@/lib/auth";
 import { normalizePhone } from "@/lib/format";
-import { cancelByCustomer, OrderError } from "@/lib/orders";
+import { cancelByCustomer, declareInstallment, OrderError } from "@/lib/orders";
 import { initCinetpay } from "@/lib/payments/cinetpay";
 import type { ActionState } from "@/components/ui/ActionForm";
 import { notifyRoles } from "@/lib/notify";
+import { rateLimit } from "@/lib/security";
 
 const uuid = z.string().uuid();
 
@@ -57,9 +58,29 @@ export async function submitPaymentRefAction(number: string, _: ActionState, fd:
   const o = await one<{ id: string }>("select o.id from orders o join payments p on p.order_id = o.id where o.number = $1 and o.user_id = $2 and p.method = 'mobile_money' and p.status = 'pending'", [number, u.id]);
   if (!o) return { error: "Commande introuvable." };
   await query("update payments set reference = $2 where order_id = $1", [o.id, ref.data]);
+  await query("update payment_installments set reference = $2 where order_id = $1 and status = 'pending' and reference is null", [o.id, ref.data]);
   await notifyRoles(["super_admin", "manager"], { type: "payment_ref", title: `Paiement à vérifier — ${number}`, body: `Réf. ${ref.data}`, link: `/admin/commandes/${number}` });
   revalidatePath(`/mon-espace/commandes/${number}`);
   return { ok: true, message: "Référence envoyée. Nous confirmons votre paiement très vite." };
+}
+
+/** Paiement partiel : le client choisit librement le montant versé ; l'administration l'approuve. */
+export async function declarePaymentAction(number: string, _: ActionState, fd: FormData): Promise<ActionState> {
+  const u = await requireUser();
+  const p = z.object({
+    amount: z.coerce.number().int("Montant en FCFA, sans décimales").min(1, "Montant invalide"),
+    reference: z.string().trim().min(4, "Référence trop courte").max(40),
+  }).safeParse({ amount: String(fd.get("amount") ?? "").replace(/[\s\u00a0]/g, ""), reference: fd.get("reference") });
+  if (!p.success) return { error: p.error.issues[0].message };
+  if (!(await rateLimit(`pay:${u.id}`, 20, 3600))) return { error: "Trop de tentatives. Réessayez plus tard." };
+  try {
+    await declareInstallment(number, u.id, p.data.amount, p.data.reference);
+  } catch (e) {
+    if (e instanceof OrderError) return { error: e.message };
+    throw e;
+  }
+  revalidatePath(`/mon-espace/commandes/${number}`);
+  return { ok: true, message: "Versement envoyé. Il sera pris en compte dès son approbation par la boutique." };
 }
 
 // ───────────── Adresses ─────────────
@@ -105,5 +126,6 @@ export async function markNotificationsReadAction(id?: string): Promise<ActionSt
   await query("update notifications set read_at = now() where user_id = $1 and read_at is null and ($2::uuid is null or id = $2)", [u.id, id ?? null]);
   revalidatePath("/mon-espace", "layout");
   revalidatePath("/admin", "layout");
+  revalidatePath("/livreur", "layout");
   return { ok: true };
 }
