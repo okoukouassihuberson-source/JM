@@ -18,7 +18,7 @@ export function DriverSelect({ orderId, drivers, current }: { orderId: string; d
   );
 }
 
-export function OrderActions({ o, drivers }: { o: { id: string; status: string; pickup: boolean; cod: boolean; paid: boolean; driverId: string | null }; drivers: Driver[] }) {
+export function OrderActions({ o, drivers }: { o: { id: string; status: string; pickup: boolean; cod: boolean; paid: boolean; partial?: boolean; driverId: string | null }; drivers: Driver[] }) {
   const [cancel, setCancel] = useState(false);
   const st = o.status;
   const act = (to: string, label: string, cls = "btn-primary", icon?: any) => (
@@ -27,8 +27,8 @@ export function OrderActions({ o, drivers }: { o: { id: string; status: string; 
   const final = ["delivered", "cancelled"].includes(st);
   return (
     <div className="space-y-3">
-      {st === "received" && !o.cod && !o.paid && <ActionButton action={() => confirmPaymentAction(o.id)} className="btn-primary w-full"><Icon name="wallet" size={18} /> Confirmer le paiement</ActionButton>}
-      {st === "received" && (o.cod || o.paid) && act("preparing", "Préparer la commande", "btn-primary", "package")}
+      {st === "received" && !o.cod && !o.paid && <ActionButton action={() => confirmPaymentAction(o.id)} className="btn-primary w-full"><Icon name="wallet" size={18} /> {o.partial ? "Solder : tout le paiement reçu" : "Confirmer le paiement"}</ActionButton>}
+      {st === "received" && (o.cod || o.paid || o.partial) && act("preparing", "Préparer la commande", "btn-primary", "package")}
       {st === "payment_confirmed" && act("preparing", "Préparer la commande", "btn-primary", "package")}
       {st === "preparing" && o.pickup && act("ready", "Marquer prête (retrait)", "btn-primary", "check")}
       {st === "ready" && act("delivered", "Remise au client — terminée", "btn-primary", "check")}

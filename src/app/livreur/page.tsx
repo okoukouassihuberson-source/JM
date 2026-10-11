@@ -20,7 +20,7 @@ export default async function Livreur() {
   if (!me) return <Empty icon="truck" title="Profil livreur non configuré" text="Demandez au gérant de finaliser votre profil." />;
   const jobs = await query<any>(
     `select d.order_id, d.status as delivery_status, d.accepted_at, o.number, o.status as order_status, o.customer_name, o.customer_phone, o.delivery_phone,
-            o.quartier, o.commune, o.address_line, o.landmark, o.instructions, o.total, o.payment_method, p.status as pay_status,
+            o.quartier, o.commune, o.address_line, o.landmark, o.instructions, o.total, o.amount_paid, o.payment_method, p.status as pay_status,
             coalesce((select json_agg(json_build_object('name', oi.name, 'quantity', oi.quantity, 'unit', oi.unit, 'unit_label', oi.unit_label)) from order_items oi where oi.order_id = o.id), '[]') as items
        from deliveries d join orders o on o.id = d.order_id left join payments p on p.order_id = o.id
       where d.driver_id = $1 and o.status in ('received','payment_confirmed','preparing','handed_to_driver','out_for_delivery') order by o.created_at`, [me.id]);

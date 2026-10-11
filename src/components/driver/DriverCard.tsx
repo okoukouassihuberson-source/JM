@@ -9,7 +9,8 @@ export function DriverCard({ d }: { d: any }) {
   const [mode, setMode] = useState<"" | "deliver" | "fail">("");
   const st = d.order_status as string;
   const accepted = !!d.accepted_at;
-  const toCollect = d.payment_method === "cash_on_delivery" && d.pay_status !== "paid";
+  const due = Math.max(0, d.total - (d.amount_paid ?? 0));
+  const toCollect = due > 0 && d.pay_status !== "paid" && (d.payment_method === "cash_on_delivery" || d.amount_paid > 0);
   return (
     <article className="card space-y-4 border-2 border-navy-900/10 p-4">
       <header className="flex items-start justify-between gap-2">
@@ -23,7 +24,7 @@ export function DriverCard({ d }: { d: any }) {
         {d.instructions && <div className="flex gap-3 rounded-xl bg-warning-50 p-3 text-sm"><Icon name="info" className="mt-0.5 shrink-0 text-warning-600" /><dd><b>Instructions :</b> {d.instructions}</dd></div>}
       </dl>
       <div className="flex items-center justify-between rounded-xl bg-electric-50 p-3">
-        <div><p className="text-xs font-bold uppercase text-muted">Montant</p><p className="h-display text-3xl text-navy-900" style={{ textTransform: "none" }}>{fcfa(d.total)}</p></div>
+        <div><p className="text-xs font-bold uppercase text-muted">{toCollect && d.amount_paid > 0 ? "Reste à encaisser" : "Montant"}</p><p className="h-display text-3xl text-navy-900" style={{ textTransform: "none" }}>{fcfa(toCollect ? due : d.total)}</p>{toCollect && d.amount_paid > 0 && <p className="text-xs text-muted">Déjà payé : {fcfa(d.amount_paid)} sur {fcfa(d.total)}</p>}</div>
         <span className={`badge ${toCollect ? "bg-promo-600 text-white" : "bg-success-50 text-success-600"}`}>{toCollect ? "À encaisser" : "Déjà payé"}</span>
       </div>
       <details className="text-sm"><summary className="cursor-pointer font-bold text-navy-900">Contenu ({d.items.length})</summary>
@@ -45,7 +46,7 @@ export function DriverCard({ d }: { d: any }) {
           <div><label className="label">Code donné par le client</label><input name="code" inputMode="numeric" maxLength={4} className="input text-center text-3xl font-black tracking-[0.5em]" placeholder="••••" autoComplete="off" /></div>
           <div><label className="label">Photo de preuve (facultatif)</label><input type="file" name="photo" accept="image/jpeg,image/png,image/webp" capture="environment" className="input !py-2 text-sm" /></div>
           <div><label className="label">Commentaire</label><input name="comment" maxLength={300} className="input" placeholder="Remis en main propre…" /></div>
-          {toCollect && <p className="rounded-xl bg-promo-50 p-3 text-sm font-bold text-promo-600">N&apos;oubliez pas d&apos;encaisser {fcfa(d.total)} en espèces.</p>}
+          {toCollect && <p className="rounded-xl bg-promo-50 p-3 text-sm font-bold text-promo-600">N&apos;oubliez pas d&apos;encaisser {fcfa(due)} en espèces.</p>}
           <div className="grid grid-cols-2 gap-2"><button type="button" className="btn-outline" onClick={() => setMode("")}>Retour</button><Submit className="btn-primary" pendingText="Envoi…">Valider</Submit></div>
         </ActionForm>
       )}

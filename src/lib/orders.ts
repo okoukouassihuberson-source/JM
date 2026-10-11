@@ -55,7 +55,7 @@ export type CheckoutInput = {
   userId: string; customerName: string; customerPhone: string;
   method: DeliveryMethod; zoneId: string | null;
   commune: string; quartier: string; address: string; landmark: string; deliveryPhone: string; instructions: string;
-  paymentMethod: "cash_on_delivery" | "mobile_money" | "online"; paymentReference: string; saveAddress: boolean;
+  paymentMethod: "cash_on_delivery" | "mobile_money" | "online"; paymentReference: string; payAmount?: number | null; saveAddress: boolean;
 };
 
 async function nextOrderNumber(c: Tx) {
@@ -127,6 +127,11 @@ export async function createOrder(input: CheckoutInput): Promise<{ id: string; n
     await query(
       "insert into payments(order_id, method, provider, amount, reference) values ($1,$2,$3,$4,$5)",
       [o.id, input.paymentMethod, input.paymentMethod === "online" ? "cinetpay" : "manual", total, input.paymentReference || null], c);
+    if (input.paymentMethod === "mobile_money") {
+      const amt = input.payAmount ?? total;
+      if (!Number.isInteger(amt) || amt < 1 || amt > total) throw new OrderError(`Le montant payé doit être compris entre 1 et ${total} FCFA.`);
+      await query("insert into payment_installments(order_id, user_id, amount, method, reference) values ($1,$2,$3,'mobile_money',$4)", [o.id, input.userId, amt, input.paymentReference || null], c);
+    }
     if (input.method !== "pickup") await query("insert into deliveries(order_id) values ($1)", [o.id], c);
     await query("insert into delivery_status_history(order_id, status, note, actor_id) values ($1,'received','Commande enregistrée',$2)", [o.id, input.userId], c);
 
@@ -195,8 +200,8 @@ export async function changeStatus(orderId: string, to: OrderStatus, actorId: st
     const pickup = o.delivery_method === "pickup";
     const d = await one<any>("select * from deliveries where order_id = $1 for update", [orderId], c);
 
-    if (to === "preparing" && o.payment_method !== "cash_on_delivery" && o.pay_status !== "paid")
-      throw new OrderError("Le paiement doit d'abord être confirmé avant la préparation.");
+    if (to === "preparing" && o.payment_method !== "cash_on_delivery" && o.pay_status !== "paid" && !(o.amount_paid > 0))
+      throw new OrderError("Le paiement (au moins un versement approuvé) doit d'abord être confirmé avant la préparation.");
     if (to === "ready" && !pickup) throw new OrderError("« Prête » concerne uniquement les retraits sur place.");
     if (to === "handed_to_driver" && (pickup || !d?.driver_id)) throw new OrderError("Affectez d'abord un livreur.");
     if (["out_for_delivery", "delivery_failed"].includes(to) && pickup) throw new OrderError("Action impossible pour un retrait.");
@@ -208,6 +213,7 @@ export async function changeStatus(orderId: string, to: OrderStatus, actorId: st
 
     if (to === "payment_confirmed") {
       await query("update payments set status = 'paid', paid_at = coalesce(paid_at, now()) where order_id = $1", [orderId], c);
+      await settleInstallments(c, orderId, actorId);
     }
     if (to === "handed_to_driver" && d) {
       const z = o.zone_id ? await one<any>("select eta_min, eta_max from delivery_zones where id = $1", [o.zone_id], c) : null;
@@ -219,6 +225,7 @@ export async function changeStatus(orderId: string, to: OrderStatus, actorId: st
     if (to === "delivered") {
       if (d) await query("update deliveries set status = 'delivered', delivered_at = now() where id = $1", [d.id], c);
       await query("update payments set status = 'paid', paid_at = coalesce(paid_at, now()) where order_id = $1", [orderId], c);
+      await query("update orders set amount_paid = total where id = $1", [orderId], c);
       await commitSale(c, orderId, actorId);
     }
     if (to === "cancelled") await releaseStock(c, orderId, actorId);
@@ -250,8 +257,65 @@ export async function confirmPayment(orderId: string, actorId: string, reference
   if (o.status === "cancelled") throw new OrderError("Commande annulée.");
   if (reference) await query("update payments set reference = $2 where order_id = $1", [orderId, reference]);
   if (o.status === "received") return changeStatus(orderId, "payment_confirmed", actorId);
-  await query("update payments set status = 'paid', paid_at = now() where order_id = $1", [orderId]);
+  await tx(async (c) => {
+    await query("update payments set status = 'paid', paid_at = now() where order_id = $1", [orderId], c);
+    await settleInstallments(c, orderId, actorId);
+  });
   await query("insert into delivery_status_history(order_id, status, note, actor_id) values ($1,$2,'Paiement encaissé',$3)", [orderId, o.status, actorId]);
+}
+
+/** Paiement soldé d'un coup : tous les versements en attente sont approuvés et le montant payé = total. */
+async function settleInstallments(c: Tx, orderId: string, actorId: string | null) {
+  await query("update payment_installments set status = 'approved', decided_by = $2, decided_at = now() where order_id = $1 and status = 'pending'", [orderId, actorId], c);
+  await query("update orders set amount_paid = total where id = $1", [orderId], c);
+}
+
+/** Le client déclare un versement (montant libre) ; il ne compte qu'une fois approuvé par l'administration. */
+export async function declareInstallment(orderNumber: string, userId: string, amount: number, reference: string) {
+  const settings = await getSettings();
+  if (!settings.payment.mobile_money_manual) throw new OrderError("Le paiement Mobile Money n'est pas disponible.");
+  await tx(async (c) => {
+    const o = await one<any>("select * from orders where number = $1 and user_id = $2 for update", [orderNumber, userId], c);
+    if (!o) throw new OrderError("Commande introuvable.");
+    if (["cancelled", "delivered", "delivery_failed"].includes(o.status)) throw new OrderError("Cette commande n'accepte plus de paiement.");
+    const due = o.total - o.amount_paid;
+    if (due <= 0) throw new OrderError("Cette commande est déjà entièrement payée.");
+    if (!Number.isInteger(amount) || amount < 1) throw new OrderError("Montant invalide.");
+    if (amount > due) throw new OrderError(`Le montant ne peut pas dépasser le reste à payer (${due} FCFA).`);
+    const n = await one<{ n: number }>("select count(*)::int as n from payment_installments where order_id = $1 and status = 'pending'", [o.id], c);
+    if (n!.n >= 5) throw new OrderError("Vous avez déjà 5 versements en attente de validation.");
+    await query("insert into payment_installments(order_id, user_id, amount, method, reference) values ($1,$2,$3,'mobile_money',$4)", [o.id, userId, amount, reference], c);
+    await notifyRoles(["super_admin", "manager"], { type: "payment_ref", title: `Versement à approuver — ${o.number}`, body: `${amount} FCFA · réf. ${reference}`, link: `/admin/commandes/${o.number}` }, c);
+  });
+}
+
+/** L'administration approuve ou rejette un versement déclaré. */
+export async function decideInstallment(id: string, approve: boolean, actorId: string, note?: string) {
+  const full = await tx(async (c) => {
+    const i = await one<any>("select * from payment_installments where id = $1 for update", [id], c);
+    if (!i) throw new OrderError("Versement introuvable.");
+    if (i.status !== "pending") throw new OrderError("Ce versement a déjà été traité.");
+    const o = await one<any>("select * from orders where id = $1 for update", [i.order_id], c);
+    if (o.status === "cancelled") throw new OrderError("Commande annulée.");
+    let paidInFull = false;
+    if (approve) {
+      if (o.amount_paid + i.amount > o.total) throw new OrderError(`Ce versement dépasse le reste à payer (${o.total - o.amount_paid} FCFA).`);
+      const paid = o.amount_paid + i.amount;
+      await query("update orders set amount_paid = $2, updated_at = now() where id = $1", [o.id, paid], c);
+      paidInFull = paid >= o.total;
+      await query("insert into delivery_status_history(order_id, status, note, actor_id) values ($1,$2,$3,$4)",
+        [o.id, o.status, `Versement approuvé : ${i.amount} FCFA (reste ${o.total - paid} FCFA)`, actorId], c);
+    }
+    await query("update payment_installments set status = $2, note = $3, decided_by = $4, decided_at = now() where id = $1", [id, approve ? "approved" : "rejected", note ?? null, actorId], c);
+    await notify(o.user_id, approve
+      ? { type: "payment_confirmed", title: "Versement approuvé", body: `${o.number} — ${i.amount} FCFA reçus${paidInFull ? ", commande entièrement payée." : `, reste ${o.total - o.amount_paid - i.amount} FCFA.`}`, link: `/mon-espace/commandes/${o.number}` }
+      : { type: "payment_failed", title: "Versement refusé", body: `${o.number} — ${i.amount} FCFA non validés${note ? ` : ${note}` : ". Contactez-nous."}`, link: `/mon-espace/commandes/${o.number}` }, c);
+    return paidInFull ? { orderId: o.id, status: o.status } : null;
+  });
+  if (full) {
+    await tx(async (c) => { await query("update payments set status = 'paid', paid_at = coalesce(paid_at, now()) where order_id = $1", [full.orderId], c); });
+    if (full.status === "received") await changeStatus(full.orderId, "payment_confirmed", actorId);
+  }
 }
 
 // ───────────── Livreurs ─────────────
