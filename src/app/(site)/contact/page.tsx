@@ -3,7 +3,7 @@ import { Icon } from "@/components/ui/Icon";
 import { displayPhone, normalizePhone } from "@/lib/format";
 import { getSettings, whatsappUrl } from "@/lib/settings";
 
-export const metadata: Metadata = { title: "Contact et horaires — JM Poissonnerie", description: "Contactez JM Poissonnerie par téléphone ou WhatsApp, trouvez notre adresse et nos horaires d'ouverture." };
+export const metadata: Metadata = { title: "Contact et horaires — OFROID Poissonnerie", description: "Contactez OFROID Poissonnerie par téléphone ou WhatsApp, trouvez notre adresse et nos horaires d'ouverture." };
 
 export default async function Contact() {
   const s = await getSettings();

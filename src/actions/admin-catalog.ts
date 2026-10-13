@@ -77,7 +77,7 @@ export async function saveProductAction(id: string | null, _: ActionState, fd: F
       const rm = fd.getAll("remove_image").map(String).filter((x) => uuid.safeParse(x).success);
       if (rm.length) await query("delete from product_images where product_id = $1 and id = any($2::uuid[])", [pid, rm], c);
       const pos = (await one<{ m: number }>("select coalesce(max(position), -1) m from product_images where product_id = $1", [pid], c))!.m;
-      for (const [i, url] of urls.entries()) await query("insert into product_images(product_id, url, alt, position) values ($1,$2,$3,$4)", [pid, url, `${d.name} — JM Poissonnerie`, pos + 1 + i], c);
+      for (const [i, url] of urls.entries()) await query("insert into product_images(product_id, url, alt, position) values ($1,$2,$3,$4)", [pid, url, `${d.name} — OFROID Poissonnerie`, pos + 1 + i], c);
       const main = String(fd.get("main_image") ?? "");
       if (uuid.safeParse(main).success) { await query("update product_images set position = position + 1 where product_id = $1", [pid], c); await query("update product_images set position = 0 where id = $1 and product_id = $2", [main, pid], c); }
       // Variantes (remplacement simple ; les commandes conservent leur instantané)

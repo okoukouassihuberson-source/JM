@@ -4,7 +4,7 @@ import { Icon, StarFill } from "./Icon";
 import { fcfa, unitShort, type UnitInfo } from "@/lib/format";
 
 export function Logo({ className = "h-11 w-auto", priority = false, src = "/images/brand/logo.webp" }: { className?: string; priority?: boolean; src?: string }) {
-  return <Image src={src} alt="JM Poissonnerie et livraison" width={1280} height={512} className={className} priority={priority} sizes="160px" />;
+  return <Image src={src} alt="OFROID Poissonnerie — la fraîcheur de la mer, chez vous" width={1288} height={474} className={className} priority={priority} sizes="200px" />;
 }
 
 export function ProductImage({ src, alt, sizes = "(max-width: 640px) 50vw, 25vw", className = "", priority = false }: { src: string | null; alt: string; sizes?: string; className?: string; priority?: boolean }) {

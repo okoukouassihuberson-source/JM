@@ -30,6 +30,6 @@ export async function removePushSubscriptionAction(endpoint: string): Promise<Ac
 export async function sendTestPushAction(): Promise<ActionState> {
   const u = await requireUser();
   if (!pushEnabled()) return { error: "Les notifications push ne sont pas configurées sur le serveur (clés VAPID manquantes)." };
-  const n = await sendPush(u.id, { title: "Test JM Poissonnerie", body: "Les alertes fonctionnent sur cet appareil ✅", link: "/livreur", tag: "test" });
+  const n = await sendPush(u.id, { title: "Test OFROID Poissonnerie", body: "Les alertes fonctionnent sur cet appareil ✅", link: "/livreur", tag: "test" });
   return n > 0 ? { ok: true, message: `Notification envoyée à ${n} appareil(s).` } : { error: "Aucun appareil abonné. Activez d'abord les alertes." };
 }

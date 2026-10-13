@@ -10,7 +10,7 @@ export default function Reset() {
   return (
     <>
       <h1 className="h-display text-4xl text-navy-900">Nouveau mot de passe</h1>
-      <p className="mb-5 mt-1 text-sm text-muted">Saisissez le code reçu de JM Poissonnerie (valable 1 heure, à usage unique).</p>
+      <p className="mb-5 mt-1 text-sm text-muted">Saisissez le code reçu de OFROID Poissonnerie (valable 1 heure, à usage unique).</p>
       <ActionForm action={resetPasswordAction} className="space-y-4">
         <div><label className="label" htmlFor="phone">Numéro de téléphone</label><input id="phone" name="phone" inputMode="tel" required className="input" /></div>
         <div><label className="label" htmlFor="code">Code à 6 chiffres</label><input id="code" name="code" inputMode="numeric" pattern="\d{6}" maxLength={6} required className="input text-center text-2xl font-black tracking-[0.5em]" autoComplete="one-time-code" /></div>

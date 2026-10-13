@@ -1,4 +1,4 @@
--- JM POISSONNERIE — étape 13/13 : sécurité (RLS) — empêche l'API publique Supabase de lire vos tables
+-- OFROID POISSONNERIE — étape 13/13 : sécurité (RLS) — empêche l'API publique Supabase de lire vos tables
 alter table public.addresses enable row level security;
 alter table public.audit_logs enable row level security;
 alter table public.banners enable row level security;

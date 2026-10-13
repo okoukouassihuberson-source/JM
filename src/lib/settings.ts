@@ -5,7 +5,7 @@ export type DayHours = { day: string; open: string; close: string; closed: boole
 
 export const DEFAULT_SETTINGS = {
   brand: {
-    name: "JM POISSONNERIE",
+    name: "OFROID POISSONNERIE",
     slogan: "La fraîcheur au service de votre table !",
     tagline: "Fraîcheur — Qualité — Confiance — Bon prix",
     logo_url: "/images/brand/logo.webp",
@@ -15,7 +15,7 @@ export const DEFAULT_SETTINGS = {
   contact: {
     phone: "0710369975",
     whatsapp: "2250710369975", // numéro WhatsApp (format international sans +) — modifiable : Paramètres → Contact
-    whatsapp_message: "Bonjour JM Poissonnerie, je souhaite passer une commande.",
+    whatsapp_message: "Bonjour OFROID Poissonnerie, je souhaite passer une commande.",
     email: "",
     address: "Quartier Begnery (Carreaux Cassé)",
     city: "",
@@ -49,9 +49,9 @@ export const DEFAULT_SETTINGS = {
     cinetpay: true, // actif seulement si les clés API sont présentes dans l'environnement
   },
   seo: {
-    title: "JM Poissonnerie — Poisson frais, carpes, poulet, rognons, tripes & livraison",
+    title: "OFROID Poissonnerie — Poisson frais, carpes, poulet, rognons, tripes & livraison",
     description:
-      "Commandez en ligne du poisson frais, des carpes, du poulet, des rognons et des tripes. Livraison rapide, qualité garantie et meilleurs prix chez JM Poissonnerie.",
+      "Commandez en ligne du poisson frais, des carpes, du poulet, des rognons et des tripes. Livraison rapide, qualité garantie et meilleurs prix chez OFROID Poissonnerie.",
     keywords: "poissonnerie, poisson frais, carpe, poissonnerie livraison, poisson frais livraison, rognon, tripes, poulet",
   },
 };

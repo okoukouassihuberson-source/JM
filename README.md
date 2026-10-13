@@ -1,6 +1,6 @@
-# JM POISSONNERIE — Plateforme e-commerce
+# OFROID POISSONNERIE — Plateforme e-commerce
 
-Boutique en ligne + livraison + back-office pour **JM Poissonnerie** (poisson, carpes, poulet, rognons, tripes…).
+Boutique en ligne + livraison + back-office pour **OFROID Poissonnerie** (poisson, carpes, poulet, rognons, tripes…).
 Direction artistique tirée des affiches : bleu marine / bleu électrique, rouge réservé aux promotions, ambiance « fraîcheur ».
 
 **Stack** : Next.js 16 (App Router, Server Actions) · TypeScript · Tailwind CSS 4 · PostgreSQL (compatible Supabase) · sharp (images) · pdfkit (factures).
@@ -82,7 +82,7 @@ URL de notification CinetPay à déclarer dans leur tableau de bord : `https://V
 
 ## Application installable (PWA)
 
-Dès l'arrivée sur le site, une bannière propose « Installer JM Poissonnerie » : Android/Chrome/Edge/desktop → bouton **Installer** (invite native) ; iPhone (Safari) → rappel « Partager → Sur l'écran d'accueil ». Si le visiteur refuse, la proposition revient après 3 jours ; elle disparaît une fois installée. Manifeste : `src/app/manifest.ts` ; service worker : `public/sw.js` (notifications push + page hors connexion `public/offline.html`). L'installation exige HTTPS (Vercel : ok).
+Dès l'arrivée sur le site, une bannière propose « Installer OFROID Poissonnerie » : Android/Chrome/Edge/desktop → bouton **Installer** (invite native) ; iPhone (Safari) → rappel « Partager → Sur l'écran d'accueil ». Si le visiteur refuse, la proposition revient après 3 jours ; elle disparaît une fois installée. Manifeste : `src/app/manifest.ts` ; service worker : `public/sw.js` (notifications push + page hors connexion `public/offline.html`). L'installation exige HTTPS (Vercel : ok).
 
 ## Sécurité
 

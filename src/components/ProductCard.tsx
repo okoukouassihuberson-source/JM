@@ -12,7 +12,7 @@ export function ProductCard({ p, fav = false, priority = false, index = 0 }: { p
     <article className="card group flex animate-rise flex-col overflow-hidden transition hover:-translate-y-1 hover:shadow-pop" style={{ animationDelay: `${Math.min(index, 8) * 60}ms` }}>
       <div className="relative aspect-[4/3] overflow-hidden bg-electric-50">
         <Link href={`/produits/${p.slug}`} aria-label={p.name} className="absolute inset-0">
-          <ProductImage src={p.image} alt={`${p.name} frais — JM Poissonnerie`} priority={priority} className="transition duration-500 group-hover:scale-105" />
+          <ProductImage src={p.image} alt={`${p.name} frais — OFROID Poissonnerie`} priority={priority} className="transition duration-500 group-hover:scale-105" />
         </Link>
         <div className="pointer-events-none absolute left-2.5 top-2.5 flex flex-col items-start gap-1">
           <Badge tone="blue" className="bg-white/95 shadow-sm">● Frais</Badge>

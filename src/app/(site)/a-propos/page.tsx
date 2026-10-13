@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Icon, type IconName } from "@/components/ui/Icon";
 import { getSettings } from "@/lib/settings";
 
-export const metadata: Metadata = { title: "À propos — JM Poissonnerie", description: "JM Poissonnerie : poisson frais, carpes, poulet, rognons et tripes sélectionnés chaque jour, au meilleur prix, avec livraison rapide." };
+export const metadata: Metadata = { title: "À propos — OFROID Poissonnerie", description: "OFROID Poissonnerie : poisson frais, carpes, poulet, rognons et tripes sélectionnés chaque jour, au meilleur prix, avec livraison rapide." };
 
 const VALUES: { i: IconName; t: string; d: string }[] = [
   { i: "fish", t: "Fraîcheur", d: "Des produits approvisionnés et conservés sur glace, vendus au plus frais." },

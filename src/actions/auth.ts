@@ -47,7 +47,7 @@ export async function loginAction(_: ActionState, fd: FormData): Promise<ActionS
   const u = await one<{ id: string; password_hash: string; active: boolean; role_key: string }>("select id, password_hash, active, role_key from users where phone = $1", [phone]);
   if (!u) { await dummyVerify(pwd); return { error: "Numéro ou mot de passe incorrect." }; }
   if (!(await verifyPassword(pwd, u.password_hash))) { await audit(u.id, "auth.login_failed", "user", u.id); return { error: "Numéro ou mot de passe incorrect." }; }
-  if (!u.active) return { error: "Ce compte est désactivé. Contactez JM Poissonnerie." };
+  if (!u.active) return { error: "Ce compte est désactivé. Contactez OFROID Poissonnerie." };
   await resetRateLimit(keyPhone);
   await createSession(u.id);
   await query("update users set last_login_at = now() where id = $1", [u.id]);
@@ -73,7 +73,7 @@ export async function forgotPasswordAction(_: ActionState, fd: FormData): Promis
     await notifyRoles(["super_admin", "manager"], { type: "password_reset", title: "Demande de réinitialisation de mot de passe", body: `${u.first_name} ${u.last_name} (${parsed.data.phone})`, link: "/admin/clients" });
   }
   // Réponse identique que le compte existe ou non (pas d'énumération de comptes).
-  return { ok: true, message: "Demande enregistrée. JM Poissonnerie vous contactera pour vous remettre un code de réinitialisation." };
+  return { ok: true, message: "Demande enregistrée. OFROID Poissonnerie vous contactera pour vous remettre un code de réinitialisation." };
 }
 
 export async function resetPasswordAction(_: ActionState, fd: FormData): Promise<ActionState> {

@@ -3,14 +3,14 @@ import type { MetadataRoute } from "next";
 export default function manifest(): MetadataRoute.Manifest {
   return {
     id: "/",
-    name: "JM Poissonnerie",
-    short_name: "JM Poissonnerie",
+    name: "OFROID Poissonnerie",
+    short_name: "OFROID Poissonnerie",
     description: "Poisson frais, carpes, poulet, rognons, tripes et livraison.",
     start_url: "/?source=pwa",
     scope: "/",
     display: "standalone",
     orientation: "portrait",
-    background_color: "#0a1a52",
+    background_color: "#ffffff",
     theme_color: "#0a1a52",
     lang: "fr",
     categories: ["shopping", "food"],

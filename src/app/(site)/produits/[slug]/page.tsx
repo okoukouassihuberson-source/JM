@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const up = unitPrice(p);
   return {
     title: `${p.name} frais — ${up.price} FCFA/${p.unit === "kg" ? "kg" : p.unit_label}`,
-    description: `${p.description.slice(0, 140)} Commandez ${p.name.toLowerCase()} en ligne chez JM Poissonnerie — livraison rapide.`,
+    description: `${p.description.slice(0, 140)} Commandez ${p.name.toLowerCase()} en ligne chez OFROID Poissonnerie — livraison rapide.`,
     alternates: { canonical: `/produits/${p.slug}` },
     openGraph: { images: p.images[0] ? [{ url: p.images[0].url, alt: p.name }] : undefined, type: "website" },
   };

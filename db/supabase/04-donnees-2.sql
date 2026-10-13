@@ -1,4 +1,4 @@
--- JM POISSONNERIE — étape 4/13 : données de démonstration (2/10)
+-- OFROID POISSONNERIE — étape 4/13 : données de démonstration (2/10)
 INSERT INTO public.orders VALUES
 	('260c2141-31d6-41f0-a9e3-0369838d0594', 'JM-20260923-0003', '53874418-117f-42bc-a458-55eda69e35fb', 'delivered', 'standard', 'b0932e79-d55b-4e43-ac35-dabcf77c7dcc', 'Zone B — Quartiers proches', 5500, 1500, 0, 7000, NULL, 'mobile_money', 'Nadège Tano', '2250700000103', 'Abobo', 'Sagbé', 'Rue 13, près du marché de Sagbé', 'Près de la pharmacie', '2250700000103', 'Appelez en arrivant', '7626', NULL, 'sold', '2026-09-23 12:39:00+00', '2026-09-23 14:14:00+00'),
 	('2756e113-6298-490c-a99a-c9232c564646', 'JM-20260923-0001', '7830c835-f6e7-40af-a30f-7e811571c084', 'delivered', 'standard', 'b0932e79-d55b-4e43-ac35-dabcf77c7dcc', 'Zone B — Quartiers proches', 5100, 1500, 0, 6600, NULL, 'mobile_money', 'Aya Bamba', '2250700000101', 'Cocody', 'Carreaux Cassé', 'Rue 11, près du marché de Carreaux Cassé', 'Près de la pharmacie', '2250700000101', NULL, '6997', NULL, 'sold', '2026-09-23 13:13:00+00', '2026-09-23 14:48:00+00'),

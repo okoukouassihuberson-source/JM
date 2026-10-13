@@ -1,4 +1,4 @@
--- JM POISSONNERIE — étape 14 : notifications push (à exécuter après les fichiers 01 à 13)
+-- OFROID POISSONNERIE — étape 14 : notifications push (à exécuter après les fichiers 01 à 13)
 -- Abonnements aux notifications push (un par appareil/navigateur)
 create table if not exists push_subscriptions (
   id         uuid primary key default gen_random_uuid(),
