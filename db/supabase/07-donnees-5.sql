@@ -1,4 +1,4 @@
--- JM POISSONNERIE — étape 7/13 : données de démonstration (5/10)
+-- OFROID POISSONNERIE — étape 7/13 : données de démonstration (5/10)
 INSERT INTO public.inventory_movements VALUES
 	(1, '7fe35d75-6517-44ae-8dab-7df4e8d3e54a', 'initial', 500.000, 0.000, NULL, '8619dd61-2023-46b0-a3dc-8272d9fcf245', 'Stock initial (démo)', '2026-10-06 23:52:30.724211+00'),
 	(2, 'eb19eed4-db58-40c1-82e3-0db84a026cdc', 'initial', 500.000, 0.000, NULL, '8619dd61-2023-46b0-a3dc-8272d9fcf245', 'Stock initial (démo)', '2026-10-06 23:52:30.73241+00'),

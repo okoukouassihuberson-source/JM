@@ -29,7 +29,7 @@ export default async function Home() {
               <Icon name="fish" size={16} /> Fraîcheur · Qualité · Bon prix
             </span>
             <h1 className="animate-rise" style={{ animationDelay: "80ms" }}>
-              <span className="h-display block text-[5.2rem] italic leading-[0.82] text-white drop-shadow-[0_4px_0_rgb(30_107_255/0.6)] sm:text-[7.5rem]">JM</span>
+              <span className="h-display block text-[5.2rem] italic leading-[0.82] text-white drop-shadow-[0_4px_0_rgb(30_107_255/0.6)] sm:text-[7.5rem]">OFROID</span>
               <span className="mt-1 block font-black italic tracking-tight text-electric-400 [font-size:clamp(2.4rem,9vw,4.6rem)]" style={{ fontFamily: "var(--font-sans)", textShadow: "0 3px 24px rgb(30 107 255 / 0.5)" }}>Poissonnerie</span>
               <span className="mt-4 block text-balance text-[1.35rem] font-extrabold uppercase leading-tight tracking-wide sm:text-3xl">{s.brand.hero_title}</span>
             </h1>
@@ -46,7 +46,7 @@ export default async function Home() {
             <div className="absolute -inset-6 rounded-[3rem] bg-electric-500/30 blur-3xl" aria-hidden="true" />
             {hero && (
               <Link href={`/produits/${hero.slug}`} className="group relative block aspect-[5/6] animate-float overflow-hidden rounded-[2rem] border-4 border-white/20 shadow-[0_30px_80px_-20px_rgb(0_0_0/0.7)] [animation-duration:9s] sm:aspect-[4/4.3]">
-                <Image src={hero.image ?? "/images/products/carpe.webp"} alt={`${hero.name} fraîche — JM Poissonnerie`} fill priority sizes="(max-width: 1024px) 90vw, 560px" className="object-cover transition duration-700 group-hover:scale-105" />
+                <Image src={hero.image ?? "/images/products/carpe.webp"} alt={`${hero.name} fraîche — OFROID Poissonnerie`} fill priority sizes="(max-width: 1024px) 90vw, 560px" className="object-cover transition duration-700 group-hover:scale-105" />
                 <div className="absolute inset-0 bg-linear-to-t from-navy-950/80 via-transparent to-white/10" />
                 <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-3 rounded-2xl bg-white/95 p-3.5 text-navy-900 shadow-pop backdrop-blur">
                   <div>
@@ -75,7 +75,7 @@ export default async function Home() {
         <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3">
           {cats.map((c, i) => (
             <Link key={c.id} href={`/produits?categorie=${c.slug}`} className="group relative flex aspect-[4/5] animate-rise flex-col justify-end overflow-hidden rounded-3xl bg-navy-900 shadow-card sm:aspect-[4/3]" style={{ animationDelay: `${i * 70}ms` }}>
-              {c.image_url && <Image src={c.image_url} alt={`${c.name} — JM Poissonnerie`} fill sizes="(max-width:1024px) 50vw, 400px" className="object-cover opacity-90 transition duration-700 group-hover:scale-110" />}
+              {c.image_url && <Image src={c.image_url} alt={`${c.name} — OFROID Poissonnerie`} fill sizes="(max-width:1024px) 50vw, 400px" className="object-cover opacity-90 transition duration-700 group-hover:scale-110" />}
               <div className="absolute inset-0 bg-linear-to-t from-navy-950 via-navy-950/40 to-transparent" />
               <div className="relative p-4 text-white sm:p-5">
                 <p className="mb-1 inline-block rounded-full bg-white/15 px-2.5 py-0.5 text-[11px] font-bold backdrop-blur">{c.product_count} produit{c.product_count > 1 ? "s" : ""}</p>

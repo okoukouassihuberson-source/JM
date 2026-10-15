@@ -1,4 +1,4 @@
-/* Service worker JM Poissonnerie : réception des notifications push (téléphone verrouillé / site fermé). */
+/* Service worker OFROID Poissonnerie : réception des notifications push (téléphone verrouillé / site fermé). */
 const CACHE = "jm-shell-v1";
 const SHELL = ["/offline.html", "/icons/icon-192.png"];
 self.addEventListener("install", (e) => {
@@ -17,9 +17,9 @@ self.addEventListener("fetch", (event) => {
 
 self.addEventListener("push", (event) => {
   let d = {};
-  try { d = event.data ? event.data.json() : {}; } catch (_) { d = { title: "JM Poissonnerie", body: event.data ? event.data.text() : "" }; }
+  try { d = event.data ? event.data.json() : {}; } catch (_) { d = { title: "OFROID Poissonnerie", body: event.data ? event.data.text() : "" }; }
   event.waitUntil(
-    self.registration.showNotification(d.title || "JM Poissonnerie", {
+    self.registration.showNotification(d.title || "OFROID Poissonnerie", {
       body: d.body || "",
       icon: "/icons/icon-192.png",
       badge: "/icons/icon-192.png",

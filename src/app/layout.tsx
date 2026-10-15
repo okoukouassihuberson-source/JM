@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
     description: s.seo.description,
     keywords: s.seo.keywords.split(",").map((k) => k.trim()),
     applicationName: s.brand.name,
-    openGraph: { type: "website", locale: "fr_FR", siteName: s.brand.name, title: s.seo.title, description: `${s.seo.description}${where ? ` — ${where}` : ""}`, images: [{ url: "/images/brand/logo.jpg", width: 1280, height: 512, alt: s.brand.name }] },
+    openGraph: { type: "website", locale: "fr_FR", siteName: s.brand.name, title: s.seo.title, description: `${s.seo.description}${where ? ` — ${where}` : ""}`, images: [{ url: "/images/brand/logo.jpg", width: 1288, height: 474, alt: s.brand.name }] },
     twitter: { card: "summary_large_image", title: s.seo.title, description: s.seo.description },
     alternates: { canonical: "/" },
     robots: { index: true, follow: true },

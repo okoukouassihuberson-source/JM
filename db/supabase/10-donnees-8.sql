@@ -1,4 +1,4 @@
--- JM POISSONNERIE — étape 10/13 : données de démonstration (8/10)
+-- OFROID POISSONNERIE — étape 10/13 : données de démonstration (8/10)
 INSERT INTO public.notifications VALUES
 	('00070ba8-685f-47ee-b7e3-f00898e20cb6', '46bdc991-335c-46fb-8671-aeb01034274c', 'driver_job', 'Nouvelle livraison JM-20261006-0001', 'Carreaux Cassé — 6600 FCFA', '/livreur', NULL, '2026-10-06 23:52:30.901032+00'),
 	('87188f58-046d-43de-a86e-69c11b101f43', '46bdc991-335c-46fb-8671-aeb01034274c', 'driver_job', 'Livraison à effectuer JM-20261006-0001', 'Carreaux Cassé — 6600 FCFA', '/livreur', NULL, '2026-10-06 23:52:30.916298+00'),

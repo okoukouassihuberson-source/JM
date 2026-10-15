@@ -65,7 +65,7 @@ export function PwaInstall() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/icons/icon-192.png" alt="" width={48} height={48} className="h-12 w-12 rounded-xl" />
         <div className="min-w-0 flex-1">
-          <p className="font-bold">Installer JM Poissonnerie</p>
+          <p className="font-bold">Installer OFROID Poissonnerie</p>
           {mode === "android" ? (
             <p className="mt-0.5 text-sm text-white/80">Commandez plus vite et recevez les alertes de livraison, directement depuis l&apos;écran d&apos;accueil.</p>
           ) : (

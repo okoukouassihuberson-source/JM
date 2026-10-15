@@ -1,4 +1,4 @@
--- JM POISSONNERIE — étape 12/13 : données de démonstration (10/10)
+-- OFROID POISSONNERIE — étape 12/13 : données de démonstration (10/10)
 INSERT INTO public.payments VALUES
 	('50fac974-6706-45e8-9f17-06006937ea91', 'be281caf-968a-4836-9076-7f215b824d72', 'mobile_money', 'manual', 'paid', 13900, 'MP262491', NULL, '2026-10-05 14:29:00+00', '2026-10-05 14:19:00+00', NULL),
 	('be33e8cd-7d4d-44b4-80fb-b2c9796dbdf3', '09ebf478-9064-412d-a9e4-0ca5df3ec786', 'mobile_money', 'manual', 'paid', 15600, 'MP262417', NULL, '2026-10-04 16:03:00+00', '2026-10-04 15:53:00+00', NULL),
@@ -15,32 +15,32 @@ INSERT INTO public.payments VALUES
 	('f26b69a2-7ecb-4062-9a59-864ddd4fe334', 'fc5e0158-a64f-40e2-aebe-439d2aad5d8e', 'cash_on_delivery', 'manual', 'pending', 4000, 'MP261085', NULL, NULL, '2026-10-06 23:52:32.732335+00', NULL),
 	('f05682e4-6284-4040-a015-7cea41231f05', '66411fb9-e506-44a5-ae69-116df70b2628', 'cash_on_delivery', 'manual', 'paid', 4000, NULL, NULL, '2026-10-06 23:52:32.788179+00', '2026-10-06 23:52:32.753804+00', NULL);
 INSERT INTO public.product_images VALUES
-	('1db01539-2df1-49fa-a279-613a8813da5e', '7fe35d75-6517-44ae-8dab-7df4e8d3e54a', '/images/products/carpe.webp', 'Carpe fraîche — JM Poissonnerie', 0),
-	('37e76ace-2c81-4a43-8544-c6acc339bfc3', 'eb19eed4-db58-40c1-82e3-0db84a026cdc', '/images/products/carpe.webp', 'Carpe grosse (calibre XL) — JM Poissonnerie', 0),
-	('dee5823b-2434-4b62-87d7-b4109aa93f7e', '01c835f7-f835-44d3-a23e-5b8ddecdf141', '/images/products/carpe.webp', 'Carpe — pièce moyenne — JM Poissonnerie', 0),
-	('42a0bf45-cccb-4c85-9894-8dfbaecd5b95', '2d3a76b0-4d7d-467b-b954-df850c730242', '/images/products/tilapia.webp', 'Tilapia frais — JM Poissonnerie', 0),
-	('20fc7ec5-05c0-4fb9-b61f-d67f42618f07', '709c1c2a-807a-49f7-9878-25a3adcd54a3', '/images/products/vivaneau.webp', 'Vivaneau rouge — JM Poissonnerie', 0),
-	('73dcad93-f9f4-4373-96c8-ec7fca700556', '13f58f2d-937d-4eec-88e9-7d864b7a86f1', '/images/products/maquereau.webp', 'Maquereau — JM Poissonnerie', 0),
-	('d28b99e2-a70e-4e4c-92fa-0b9cc236b4d2', '4418b047-5b8b-4fcf-b56b-d19d8504e4ef', '/images/products/tilapia.webp', 'Capitaine — JM Poissonnerie', 0),
-	('ac7e9605-6cb4-4296-a204-56ba8409d626', 'a7a3e3c8-5bee-475a-bcaf-294686d4fda1', '/images/products/tilapia.webp', 'Silure (machoiron) — JM Poissonnerie', 0),
-	('be5f4ee9-5599-43d2-bc44-670d3aff8641', '551f501f-58bb-4ed6-9c89-542776b45ba5', '/images/products/maquereau.webp', 'Thon frais — JM Poissonnerie', 0),
-	('1ff6a958-6a29-4559-9ae7-11ddb348e7d1', 'de4eecab-8ab3-407a-98d2-087307147b85', '/images/products/poisson-mix.webp', 'Sardines fraîches — JM Poissonnerie', 0),
-	('6d89b265-ffad-4ab5-8593-a204ce626d8e', 'a32742bf-88da-486b-b7ed-942d1b95ca6a', '/images/products/poisson-mix.webp', 'Plateau de poissons assortis — JM Poissonnerie', 0),
-	('3daad8be-5a45-4c7d-99fc-0e3d70520718', 'aaaff71a-b99f-408a-a1f0-dff98fa0765f', '/images/products/poulet.webp', 'Poulet de chair entier — JM Poissonnerie', 0),
-	('64763660-4290-44b2-8cc2-a73436761a42', '448e4acc-98f1-498b-b4c8-6149e46b5670', '/images/products/poulet.webp', 'Poulet fermier — JM Poissonnerie', 0),
-	('a82e284b-89e2-4ae6-ad9d-f3a92199a636', '3c29a17a-a9b3-40d6-9e13-2d833925cc09', '/images/products/poulet.webp', 'Cuisses de poulet — JM Poissonnerie', 0),
-	('ebf30572-38f9-4a56-b83c-9e2f87fa639e', 'e4939dd5-b8e1-4104-a307-a07c69bbabd6', '/images/products/poulet.webp', 'Ailes de poulet — JM Poissonnerie', 0),
-	('8e6a9a00-4c80-4bb3-be7f-77a307df2eb8', '6a4ca4a5-4617-4891-9afb-691f9221c813', '/images/products/rognon.webp', 'Rognon de bœuf — JM Poissonnerie', 0),
-	('be0171be-962e-429e-a9a3-c0ee7ce0dadb', 'f5d7dc64-4be2-44dd-8eff-ec64389272bd', '/images/products/rognon.webp', 'Rognon de porc — JM Poissonnerie', 0),
-	('2289fd51-05bf-46ec-9f44-0d4d137e235c', '9392adb1-711e-4f76-b7ce-f5b1865c83fa', '/images/products/rognon.webp', 'Foie de bœuf — JM Poissonnerie', 0),
-	('1d8fa530-44b0-41f0-9ab9-4f5a34ca5cd0', '0e48237b-088d-477a-88e8-7ddff65e3260', '/images/products/tripes.webp', 'Tripes de bœuf — JM Poissonnerie', 0),
-	('9176632c-3d2e-41c8-8d98-a543451115bf', 'aa055c20-67b7-41bc-ae67-ed1586163e68', '/images/products/tripes.webp', 'Gras-double — JM Poissonnerie', 0);
+	('1db01539-2df1-49fa-a279-613a8813da5e', '7fe35d75-6517-44ae-8dab-7df4e8d3e54a', '/images/products/carpe.webp', 'Carpe fraîche — OFROID Poissonnerie', 0),
+	('37e76ace-2c81-4a43-8544-c6acc339bfc3', 'eb19eed4-db58-40c1-82e3-0db84a026cdc', '/images/products/carpe.webp', 'Carpe grosse (calibre XL) — OFROID Poissonnerie', 0),
+	('dee5823b-2434-4b62-87d7-b4109aa93f7e', '01c835f7-f835-44d3-a23e-5b8ddecdf141', '/images/products/carpe.webp', 'Carpe — pièce moyenne — OFROID Poissonnerie', 0),
+	('42a0bf45-cccb-4c85-9894-8dfbaecd5b95', '2d3a76b0-4d7d-467b-b954-df850c730242', '/images/products/tilapia.webp', 'Tilapia frais — OFROID Poissonnerie', 0),
+	('20fc7ec5-05c0-4fb9-b61f-d67f42618f07', '709c1c2a-807a-49f7-9878-25a3adcd54a3', '/images/products/vivaneau.webp', 'Vivaneau rouge — OFROID Poissonnerie', 0),
+	('73dcad93-f9f4-4373-96c8-ec7fca700556', '13f58f2d-937d-4eec-88e9-7d864b7a86f1', '/images/products/maquereau.webp', 'Maquereau — OFROID Poissonnerie', 0),
+	('d28b99e2-a70e-4e4c-92fa-0b9cc236b4d2', '4418b047-5b8b-4fcf-b56b-d19d8504e4ef', '/images/products/tilapia.webp', 'Capitaine — OFROID Poissonnerie', 0),
+	('ac7e9605-6cb4-4296-a204-56ba8409d626', 'a7a3e3c8-5bee-475a-bcaf-294686d4fda1', '/images/products/tilapia.webp', 'Silure (machoiron) — OFROID Poissonnerie', 0),
+	('be5f4ee9-5599-43d2-bc44-670d3aff8641', '551f501f-58bb-4ed6-9c89-542776b45ba5', '/images/products/maquereau.webp', 'Thon frais — OFROID Poissonnerie', 0),
+	('1ff6a958-6a29-4559-9ae7-11ddb348e7d1', 'de4eecab-8ab3-407a-98d2-087307147b85', '/images/products/poisson-mix.webp', 'Sardines fraîches — OFROID Poissonnerie', 0),
+	('6d89b265-ffad-4ab5-8593-a204ce626d8e', 'a32742bf-88da-486b-b7ed-942d1b95ca6a', '/images/products/poisson-mix.webp', 'Plateau de poissons assortis — OFROID Poissonnerie', 0),
+	('3daad8be-5a45-4c7d-99fc-0e3d70520718', 'aaaff71a-b99f-408a-a1f0-dff98fa0765f', '/images/products/poulet.webp', 'Poulet de chair entier — OFROID Poissonnerie', 0),
+	('64763660-4290-44b2-8cc2-a73436761a42', '448e4acc-98f1-498b-b4c8-6149e46b5670', '/images/products/poulet.webp', 'Poulet fermier — OFROID Poissonnerie', 0),
+	('a82e284b-89e2-4ae6-ad9d-f3a92199a636', '3c29a17a-a9b3-40d6-9e13-2d833925cc09', '/images/products/poulet.webp', 'Cuisses de poulet — OFROID Poissonnerie', 0),
+	('ebf30572-38f9-4a56-b83c-9e2f87fa639e', 'e4939dd5-b8e1-4104-a307-a07c69bbabd6', '/images/products/poulet.webp', 'Ailes de poulet — OFROID Poissonnerie', 0),
+	('8e6a9a00-4c80-4bb3-be7f-77a307df2eb8', '6a4ca4a5-4617-4891-9afb-691f9221c813', '/images/products/rognon.webp', 'Rognon de bœuf — OFROID Poissonnerie', 0),
+	('be0171be-962e-429e-a9a3-c0ee7ce0dadb', 'f5d7dc64-4be2-44dd-8eff-ec64389272bd', '/images/products/rognon.webp', 'Rognon de porc — OFROID Poissonnerie', 0),
+	('2289fd51-05bf-46ec-9f44-0d4d137e235c', '9392adb1-711e-4f76-b7ce-f5b1865c83fa', '/images/products/rognon.webp', 'Foie de bœuf — OFROID Poissonnerie', 0),
+	('1d8fa530-44b0-41f0-9ab9-4f5a34ca5cd0', '0e48237b-088d-477a-88e8-7ddff65e3260', '/images/products/tripes.webp', 'Tripes de bœuf — OFROID Poissonnerie', 0),
+	('9176632c-3d2e-41c8-8d98-a543451115bf', 'aa055c20-67b7-41bc-ae67-ed1586163e68', '/images/products/tripes.webp', 'Gras-double — OFROID Poissonnerie', 0);
 INSERT INTO public.product_images VALUES
-	('2854467c-b0da-4b6b-94c0-23df8e1d2cbf', '64690d87-05ed-4cdd-bcd1-ec08b3e68780', '/images/products/tete-de-porc.webp', 'Tête de porc — JM Poissonnerie', 0),
-	('8e8cfec1-f587-4864-a66d-32bf7c370b28', 'a52da558-36a3-4f6a-bfb2-23a740b60276', '/images/products/tete-de-porc.webp', 'Pieds de porc — JM Poissonnerie', 0),
-	('de33389d-d53d-4369-af81-21cb28a3de3d', '8828521e-0232-4e04-92cc-31a277e04809', '/images/products/crevettes.webp', 'Crevettes — JM Poissonnerie', 0),
-	('c120681a-1158-4c00-aa3c-b94fb14e25d8', 'fb3608da-d0d7-4a58-874c-3413fd2fba64', '/images/products/saumon.webp', 'Darne de saumon — JM Poissonnerie', 0),
-	('48e2f623-c0d4-4449-8745-56c7239190a2', '7f3d8684-32a4-455f-ba2a-4576c3138f33', '/images/products/poisson-mix.webp', 'Sachet de glace — JM Poissonnerie', 0);
+	('2854467c-b0da-4b6b-94c0-23df8e1d2cbf', '64690d87-05ed-4cdd-bcd1-ec08b3e68780', '/images/products/tete-de-porc.webp', 'Tête de porc — OFROID Poissonnerie', 0),
+	('8e8cfec1-f587-4864-a66d-32bf7c370b28', 'a52da558-36a3-4f6a-bfb2-23a740b60276', '/images/products/tete-de-porc.webp', 'Pieds de porc — OFROID Poissonnerie', 0),
+	('de33389d-d53d-4369-af81-21cb28a3de3d', '8828521e-0232-4e04-92cc-31a277e04809', '/images/products/crevettes.webp', 'Crevettes — OFROID Poissonnerie', 0),
+	('c120681a-1158-4c00-aa3c-b94fb14e25d8', 'fb3608da-d0d7-4a58-874c-3413fd2fba64', '/images/products/saumon.webp', 'Darne de saumon — OFROID Poissonnerie', 0),
+	('48e2f623-c0d4-4449-8745-56c7239190a2', '7f3d8684-32a4-455f-ba2a-4576c3138f33', '/images/products/poisson-mix.webp', 'Sachet de glace — OFROID Poissonnerie', 0);
 INSERT INTO public.profiles VALUES
 	('de71b7f0-9fa4-4c50-ba48-2d87360575bd', NULL, NULL, NULL, true, '2026-10-06 23:52:29.656128+00'),
 	('35fd92c4-7715-41d3-bf19-e903a163cd28', NULL, NULL, NULL, true, '2026-10-06 23:52:29.825376+00'),

@@ -32,12 +32,12 @@ export function AdminNav({ items, user, logout }: { items: NavItem[]; user: { na
   return (
     <>
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col bg-navy-950 lg:flex">
-        <div className="flex h-16 items-center gap-2 px-5"><span className="h-display text-2xl text-white">JM <span className="text-electric-400">Admin</span></span></div>
+        <div className="flex h-16 items-center gap-2 px-5"><span className="h-display text-2xl text-white">OFROID <span className="text-electric-400">Admin</span></span></div>
         {list}{foot}
       </aside>
       <div className="sticky top-0 z-40 flex h-14 items-center justify-between bg-navy-950 px-3 text-white lg:hidden">
         <button onClick={() => setOpen(true)} className="grid size-11 place-items-center rounded-full hover:bg-white/10" aria-label="Menu admin"><Icon name="menu" /></button>
-        <span className="h-display text-xl">JM <span className="text-electric-400">Admin</span></span>
+        <span className="h-display text-xl">OFROID <span className="text-electric-400">Admin</span></span>
         <Link href="/" className="grid size-11 place-items-center rounded-full hover:bg-white/10" aria-label="Voir le site"><Icon name="home" /></Link>
       </div>
       {open && (

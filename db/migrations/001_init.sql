@@ -1,4 +1,4 @@
--- JM POISSONNERIE — schéma initial (PostgreSQL 14+)
+-- OFROID POISSONNERIE — schéma initial (PostgreSQL 14+)
 -- Montants en FCFA (entiers). Quantités en unité de vente (kg décimaux, pièces entières…).
 
 create extension if not exists pgcrypto;

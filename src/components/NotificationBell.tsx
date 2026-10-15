@@ -31,7 +31,7 @@ export function NotificationBell({ initial, href = "/mon-espace/notifications", 
         if (stop) return;
         setUnread(j.unread);
         if (since.current && j.items.length) {
-          beep(); navigator.vibrate?.([250, 120, 250]);
+          beep(); if (navigator.userActivation?.hasBeenActive) navigator.vibrate?.([250, 120, 250]);
           toast(j.items[0].title + (j.items.length > 1 ? ` (+${j.items.length - 1})` : ""));
           if (refreshOnNew) router.refresh();
         }

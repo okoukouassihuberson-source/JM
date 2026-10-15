@@ -46,7 +46,7 @@ async function main() {
   if (minimal) {
     const phone = process.env.SEED_ADMIN_PHONE, pwd = process.env.SEED_ADMIN_PASSWORD;
     if (!phone || !pwd || pwd.length < 10) throw new Error("Mode --minimal : définir SEED_ADMIN_PHONE (ex 2250710369975) et SEED_ADMIN_PASSWORD (≥ 10 caractères).");
-    await query(`insert into users(phone, password_hash, role_key, first_name, last_name) values ($1,$2,'super_admin','Admin','JM') on conflict (phone) do nothing`, [phone, await hashPassword(pwd)]);
+    await query(`insert into users(phone, password_hash, role_key, first_name, last_name) values ($1,$2,'super_admin','Admin','OFROID') on conflict (phone) do nothing`, [phone, await hashPassword(pwd)]);
     console.log("✔ base minimale prête (catégories, zones, super admin)");
     return pool().end();
   }
@@ -112,7 +112,7 @@ async function main() {
       [cat[c], slugify(name), name, desc, unit, labels[unit], unit === "kg" ? 0.5 : 1, unit === "kg" ? 0.5 : 1, unit === "kg", price, promo ?? null, !!promo,
         ["Carpe fraîche", "Tilapia frais", "Rognon de bœuf", "Tripes de bœuf", "Poulet de chair entier", "Tête de porc", "Vivaneau rouge", "Crevettes"].includes(name),
         `JM-${String(i + 1).padStart(3, "0")}`, null]))!;
-    await query("insert into product_images(product_id, url, alt) values ($1,$2,$3)", [p.id, IMG(img), `${name} — JM Poissonnerie`]);
+    await query("insert into product_images(product_id, url, alt) values ($1,$2,$3)", [p.id, IMG(img), `${name} — OFROID Poissonnerie`]);
     await query("insert into inventory(product_id, on_hand, alert_threshold) values ($1,0,$2)", [p.id, thr]);
     await tx((cx) => adjustStock(cx, p.id, "initial", 500, staff.stock, "Stock initial (démo)"));
     targets[p.id] = stock;

@@ -1,4 +1,4 @@
--- JM POISSONNERIE — étape 11/13 : données de démonstration (9/10)
+-- OFROID POISSONNERIE — étape 11/13 : données de démonstration (9/10)
 INSERT INTO public.order_items VALUES
 	('09991f80-b6f9-49e9-84a7-91e2cdc6ecfa', '2756e113-6298-490c-a99a-c9232c564646', '2d3a76b0-4d7d-467b-b954-df850c730242', NULL, 'Tilapia frais', NULL, 'kg', 'kg', 2.000, 2000, 2000, 4000, '/images/products/tilapia.webp'),
 	('ca88e915-9b6e-48a7-89e4-e59b31d121e8', '2756e113-6298-490c-a99a-c9232c564646', 'a7a3e3c8-5bee-475a-bcaf-294686d4fda1', NULL, 'Silure (machoiron)', NULL, 'kg', 'kg', 0.500, 2200, 2200, 1100, '/images/products/tilapia.webp'),

@@ -1,4 +1,4 @@
--- JM POISSONNERIE — étape 6/13 : données de démonstration (4/10)
+-- OFROID POISSONNERIE — étape 6/13 : données de démonstration (4/10)
 INSERT INTO public.delivery_status_history VALUES
 	(161, 'c238f1c0-03b6-48e9-8a63-4fb7143721ef', 'delivery_failed', 'Client injoignable', '7341ecd0-279d-432a-bcdd-f7c771f7f3b7', '2026-09-29 16:15:00+00'),
 	(162, 'e21bb636-85a6-4f3d-92ca-b306c5ca8ddc', 'received', 'Commande enregistrée', '9d359047-05ac-4f94-8ddc-3c8503b34fe0', '2026-09-29 18:29:00+00'),

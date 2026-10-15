@@ -1,4 +1,4 @@
--- JM POISSONNERIE — étape 15 : paiements partiels (à exécuter après les fichiers 01 à 14)
+-- OFROID POISSONNERIE — étape 15 : paiements partiels (à exécuter après les fichiers 01 à 14)
 alter table orders add column if not exists amount_paid int not null default 0;
 
 create table if not exists payment_installments (

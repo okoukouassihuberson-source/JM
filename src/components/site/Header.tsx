@@ -31,7 +31,7 @@ export async function Header() {
       </div>
       <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-2.5 lg:gap-6">
         <MobileMenu user={user ? { name: user.first_name, home: landingFor(user) } : null} categories={cats.map((c) => ({ slug: c.slug, name: c.name }))} nav={NAV} logout={logoutAction} />
-        <Link href="/" aria-label="JM Poissonnerie — accueil" className="shrink-0"><Logo className="h-11 w-auto lg:h-14" priority src={s.brand.logo_url} /></Link>
+        <Link href="/" aria-label="OFROID Poissonnerie — accueil" className="shrink-0"><Logo className="h-12 w-auto lg:h-16" priority src={s.brand.logo_url} /></Link>
         <nav className="ml-2 hidden items-center gap-1 lg:flex" aria-label="Navigation principale">
           {NAV.slice(0, 2).map((n) => <Link key={n.href} href={n.href} className="rounded-lg px-3 py-2 text-sm font-bold text-navy-900 transition hover:bg-electric-50 hover:text-electric-500">{n.label}</Link>)}
           <details className="group relative">

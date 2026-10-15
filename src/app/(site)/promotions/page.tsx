@@ -3,7 +3,7 @@ import { PromoCard, SectionTitle } from "@/components/site/Sections";
 import { Empty } from "@/components/ui/bits";
 import { listProducts } from "@/lib/catalog";
 
-export const metadata: Metadata = { title: "Les bonnes affaires — promotions poisson frais", description: "Promotions et offres limitées sur le poisson frais, les carpes, le poulet, les rognons et les tripes. Profitez-en vite chez JM Poissonnerie." };
+export const metadata: Metadata = { title: "Les bonnes affaires — promotions poisson frais", description: "Promotions et offres limitées sur le poisson frais, les carpes, le poulet, les rognons et les tripes. Profitez-en vite chez OFROID Poissonnerie." };
 
 export default async function Promotions() {
   const { items } = await listProducts({ promo: true, pageSize: 40 });

@@ -14,7 +14,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
   const c = cats.find((x) => x.slug === sp.categorie);
   return {
     title: c ? `${c.name} frais — prix au kilo et livraison` : "Nos produits frais : poissons, carpes, poulet, rognons, tripes",
-    description: c ? `${c.description} Commandez en ligne ${c.name.toLowerCase()} frais, livraison rapide chez JM Poissonnerie.` : "Poisson frais, carpes, poulet, rognons, tripes et plus : commandez en ligne, livraison rapide et meilleurs prix.",
+    description: c ? `${c.description} Commandez en ligne ${c.name.toLowerCase()} frais, livraison rapide chez OFROID Poissonnerie.` : "Poisson frais, carpes, poulet, rognons, tripes et plus : commandez en ligne, livraison rapide et meilleurs prix.",
     alternates: { canonical: c ? `/produits?categorie=${c.slug}` : "/produits" },
     robots: sp.q || sp.page ? { index: false, follow: true } : undefined,
   };

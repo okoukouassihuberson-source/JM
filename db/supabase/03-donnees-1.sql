@@ -1,4 +1,4 @@
--- JM POISSONNERIE — étape 3/13 : données de démonstration (1/10)
+-- OFROID POISSONNERIE — étape 3/13 : données de démonstration (1/10)
 INSERT INTO public.users VALUES
 	('de71b7f0-9fa4-4c50-ba48-2d87360575bd', '2250700000001', 'scrypt$16384$8$1$DlbEHAqi9KO4u25RF229Sg==$fVdLLc469rf6Ot5nA7R35vst0bEJ8j7L4N2il0df0J6jNC15lDSu+5Ca8vN1QAEDyJ7aUAxQB/jQcAHXf8lXIw==', 'super_admin', 'Awa', 'Koné', true, '2026-10-06 23:52:29.652411+00', NULL),
 	('35fd92c4-7715-41d3-bf19-e903a163cd28', '2250700000002', 'scrypt$16384$8$1$IPWvd4MxiuYVkzOLsP/pOA==$1hBbwEDMsjFWfdoF3QP03GkpoaUBV5Q2WTS9pqhcuZ6TFW0nhmDZk5aQ2PSfQrq8QrmREkYQVyPFJHs2/BlNnQ==', 'manager', 'Jean-Marc', 'Yao', true, '2026-10-06 23:52:29.823232+00', NULL),

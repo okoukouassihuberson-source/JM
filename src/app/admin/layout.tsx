@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 import { AutoRefresh } from "@/components/AutoRefresh";
 import { NotificationBell } from "@/components/NotificationBell";
 
-export const metadata: Metadata = { title: { default: "Administration", template: "%s | JM Admin" }, robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: { default: "Administration", template: "%s | OFROID Admin" }, robots: { index: false, follow: false } };
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const u = await requireUser("/admin");

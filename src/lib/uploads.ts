@@ -8,6 +8,35 @@ const MAX_BYTES = 6 * 1024 * 1024;
 
 export class UploadError extends Error {}
 
+// Supabase Storage (recommandé en production sur Vercel : le disque y est éphémère).
+// Actif si SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY sont définis ; sinon stockage sur disque (UPLOAD_DIR).
+const storage = () => {
+  const url = (process.env.SUPABASE_URL || "").replace(/\/$/, "");
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+  return url && key ? { url, key, bucket: process.env.SUPABASE_BUCKET || "jm-media" } : null;
+};
+
+async function uploadToSupabase(st: NonNullable<ReturnType<typeof storage>>, objectPath: string, body: Buffer) {
+  const headers = { Authorization: `Bearer ${st.key}`, apikey: st.key };
+  const put = () => fetch(`${st.url}/storage/v1/object/${st.bucket}/${objectPath}`, {
+    method: "POST", headers: { ...headers, "Content-Type": "image/webp", "Cache-Control": "max-age=31536000" }, body: new Uint8Array(body),
+  });
+  let r = await put();
+  if (r.status === 404 || r.status === 400) {
+    // Bucket absent : on le crée (public, WebP uniquement) puis on réessaie une fois.
+    const c = await fetch(`${st.url}/storage/v1/bucket`, {
+      method: "POST", headers: { ...headers, "Content-Type": "application/json" },
+      body: JSON.stringify({ id: st.bucket, name: st.bucket, public: true, file_size_limit: MAX_BYTES, allowed_mime_types: ["image/webp"] }),
+    });
+    if (c.ok || c.status === 409) r = await put();
+  }
+  if (!r.ok) {
+    console.error("Supabase Storage:", r.status, await r.text().catch(() => ""));
+    throw new UploadError("Envoi de l'image impossible (stockage indisponible). Réessayez.");
+  }
+  return `${st.url}/storage/v1/object/public/${st.bucket}/${objectPath}`;
+}
+
 function sniff(b: Buffer): "jpeg" | "png" | "webp" | null {
   if (b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff) return "jpeg";
   if (b.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))) return "png";
@@ -32,6 +61,10 @@ export async function saveImage(file: File, maxWidth = 1600): Promise<string> {
   }
   const sub = new Date().toISOString().slice(0, 7);
   const name = `${randomUUID()}.webp`;
+  const st = storage();
+  if (st) return uploadToSupabase(st, `${sub}/${name}`, out);
+  // Sur Vercel le disque est éphémère : les photos « enregistrées » disparaîtraient (icône d'image cassée). On refuse clairement.
+  if (process.env.VERCEL) throw new UploadError("Stockage des photos non configuré : définissez SUPABASE_URL et SUPABASE_SERVICE_ROLE_KEY dans Vercel, puis redéployez.");
   await mkdir(path.join(/* turbopackIgnore: true */ uploadDir(), sub), { recursive: true });
   await writeFile(path.join(/* turbopackIgnore: true */ uploadDir(), sub, name), out);
   return `/api/media/${sub}/${name}`;
