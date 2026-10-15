@@ -63,6 +63,8 @@ export async function saveImage(file: File, maxWidth = 1600): Promise<string> {
   const name = `${randomUUID()}.webp`;
   const st = storage();
   if (st) return uploadToSupabase(st, `${sub}/${name}`, out);
+  // Sur Vercel le disque est éphémère : les photos « enregistrées » disparaîtraient (icône d'image cassée). On refuse clairement.
+  if (process.env.VERCEL) throw new UploadError("Stockage des photos non configuré : définissez SUPABASE_URL et SUPABASE_SERVICE_ROLE_KEY dans Vercel, puis redéployez.");
   await mkdir(path.join(/* turbopackIgnore: true */ uploadDir(), sub), { recursive: true });
   await writeFile(path.join(/* turbopackIgnore: true */ uploadDir(), sub, name), out);
   return `/api/media/${sub}/${name}`;
