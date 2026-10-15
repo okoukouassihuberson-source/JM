@@ -11,9 +11,9 @@ export class UploadError extends Error {}
 // Supabase Storage (recommandé en production sur Vercel : le disque y est éphémère).
 // Actif si SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY sont définis ; sinon stockage sur disque (UPLOAD_DIR).
 const storage = () => {
-  const url = (process.env.SUPABASE_URL || "").replace(/\/$/, "");
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
-  return url && key ? { url, key, bucket: process.env.SUPABASE_BUCKET || "jm-media" } : null;
+  const url = (process.env.SUPABASE_URL || "").trim().replace(/\/$/, "");
+  const key = (process.env.SUPABASE_SERVICE_ROLE_KEY || "").trim();
+  return url && key ? { url, key, bucket: (process.env.SUPABASE_BUCKET || "").trim() || "jm-media" } : null;
 };
 
 async function uploadToSupabase(st: NonNullable<ReturnType<typeof storage>>, objectPath: string, body: Buffer) {
