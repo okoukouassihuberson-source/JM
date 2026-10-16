@@ -13,7 +13,7 @@ export async function GET(req: Request) {
   const [{ unread, now }] = await query<{ unread: number; now: string }>(
     `select count(*)::int as unread, to_char(now() at time zone 'utc', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"') as now from notifications where user_id = $1 and read_at is null`, [u.id]);
   const items = d
-    ? await query("select id, title, body, link, created_at from notifications where user_id = $1 and read_at is null and created_at > $2 order by created_at desc limit 5", [u.id, d])
+    ? await query("select id, type, title, body, link, created_at from notifications where user_id = $1 and read_at is null and created_at > $2 order by created_at desc limit 5", [u.id, d])
     : [];
   return NextResponse.json({ unread, now, items }, { headers: { "Cache-Control": "no-store" } });
 }

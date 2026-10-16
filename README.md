@@ -76,6 +76,7 @@ URL de notification CinetPay à déclarer dans leur tableau de bord : `https://V
 
 ## Notifications
 
+* **Sonnerie admin** : à chaque nouvelle commande ou versement à approuver, l'admin entend une sonnerie répétée toutes les 3 s (jusqu'à 90 s) avec un bandeau rouge, jusqu'à « Arrêter la sonnerie » ou l'ouverture de la commande. Les navigateurs exigent un premier toucher sur la page : un bouton « Activer la sonnerie des commandes » s'affiche tant que ce n'est pas fait ; « Couper » la désactive. Page fermée / téléphone verrouillé : Web Push.
 * **Dans l'application** : cloche avec pastille, alerte immédiate (son, vibration, message) quand une notification arrive page ouverte, rafraîchissement automatique des livraisons.
 * **Sur le téléphone, même verrouillé** (Web Push) : le livreur, le client ou l'équipe appuie sur « Activer les alertes ». Il faut définir les 3 variables `VAPID_*` (sans elles, seules les alertes dans l'application fonctionnent). Android : Chrome. iPhone : ouvrir le site dans Safari → Partager → *Sur l'écran d'accueil*, puis activer les alertes depuis l'icône.
 * Base : exécuter `db/migrations/004_push.sql` (Supabase : fichier `db/supabase/14-push.sql`).
