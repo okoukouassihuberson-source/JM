@@ -27,7 +27,7 @@ export default async function About() {
             <p>Installés au <b>{s.contact.address}</b>{s.contact.city ? ` (${s.contact.city})` : ""}, nous servons les particuliers comme les professionnels, sur place ou en livraison.</p>
             <div className="flex flex-wrap gap-3 pt-2"><Link href="/produits" className="btn-primary">Voir nos produits</Link><Link href="/livraison" className="btn-outline">Zones de livraison</Link></div>
           </div>
-          <div className="relative aspect-[4/3] overflow-hidden rounded-3xl shadow-pop"><Image src="/images/categories/fruits-de-mer.webp" alt="Poissons, crevettes et saumon frais sur glace" fill sizes="(max-width:1024px) 100vw, 560px" className="object-cover" /></div>
+          <div className="relative aspect-video overflow-hidden rounded-3xl bg-white shadow-pop"><Image src="/images/brand/ofroid.webp" alt="OFROID Poissonnerie — du poisson frais, chaque jour" fill sizes="(max-width:1024px) 100vw, 560px" className="object-contain p-2" /></div>
         </div>
         <div><h2 className="h-display mb-6 text-4xl text-navy-900">Nos engagements</h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{VALUES.map((v) => <div key={v.t} className="card p-5"><span className="mb-3 grid size-12 place-items-center rounded-2xl bg-navy-900 text-white"><Icon name={v.i} /></span><h3 className="text-lg font-extrabold text-navy-900">{v.t}</h3><p className="mt-1 text-sm text-muted">{v.d}</p></div>)}</div></div>
