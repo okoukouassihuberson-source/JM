@@ -14,11 +14,13 @@ function beep() {
 }
 
 /** Cloche avec pastille + alerte immédiate (son, vibration, toast) quand une nouvelle notification arrive, page ouverte. */
-export function NotificationBell({ initial, href = "/mon-espace/notifications", refreshOnNew = true, seconds = 12 }: { initial: number; href?: string; refreshOnNew?: boolean; seconds?: number }) {
+export function NotificationBell({ initial, href = "/mon-espace/notifications", refreshOnNew = true, seconds = 12, alarmTypes }: { initial: number; href?: string; refreshOnNew?: boolean; seconds?: number; alarmTypes?: string[] }) {
   const [unread, setUnread] = useState(initial);
   const since = useRef<string | null>(null);
   const toast = useToast();
   const router = useRouter();
+  const alarmRef = useRef(alarmTypes);
+  alarmRef.current = alarmTypes;
   useEffect(() => setUnread(initial), [initial]);
   useEffect(() => {
     let stop = false;
@@ -31,7 +33,11 @@ export function NotificationBell({ initial, href = "/mon-espace/notifications", 
         if (stop) return;
         setUnread(j.unread);
         if (since.current && j.items.length) {
-          beep(); if (navigator.userActivation?.hasBeenActive) navigator.vibrate?.([250, 120, 250]);
+          // Types « alarme » (nouvelle commande…) : sonnerie répétée gérée par <OrderAlarm/> ; le reste : simple bip.
+          const types = alarmRef.current;
+          const alarm = types ? j.items.filter((i: { type: string }) => types.includes(i.type)) : [];
+          if (alarm.length) window.dispatchEvent(new CustomEvent("jm:alarm", { detail: alarm }));
+          if (alarm.length < j.items.length) { beep(); if (navigator.userActivation?.hasBeenActive) navigator.vibrate?.([250, 120, 250]); }
           toast(j.items[0].title + (j.items.length > 1 ? ` (+${j.items.length - 1})` : ""));
           if (refreshOnNew) router.refresh();
         }

@@ -6,6 +6,9 @@ import { can, requireUser, landingFor } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { AutoRefresh } from "@/components/AutoRefresh";
 import { NotificationBell } from "@/components/NotificationBell";
+import { OrderAlarm } from "@/components/admin/OrderAlarm";
+
+const ALARM_TYPES = ["new_order", "payment_ref"];
 
 export const metadata: Metadata = { title: { default: "Administration", template: "%s | OFROID Admin" }, robots: { index: false, follow: false } };
 
@@ -36,7 +39,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     <div className="min-h-dvh bg-ice lg:pl-64">
       <AdminNav items={items} user={{ name: `${u.first_name} ${u.last_name}`, role: u.role_label }} logout={logoutAction} />
       {/* Alerte en direct (son + message + rafraîchissement) à chaque nouvelle commande / versement, sans recharger la page. */}
-      <div className="fixed right-[4.25rem] top-2 z-40 rounded-full bg-navy-900 text-white shadow-pop lg:right-6 lg:top-4"><NotificationBell initial={unread?.n ?? 0} href="/admin/commandes" seconds={8} /></div>
+      <div className="fixed right-[4.25rem] top-2 z-40 rounded-full bg-navy-900 text-white shadow-pop lg:right-6 lg:top-4"><NotificationBell initial={unread?.n ?? 0} href="/admin/commandes" seconds={8} alarmTypes={ALARM_TYPES} /></div>
+      <OrderAlarm />
       <AutoRefresh seconds={20} />
       <main className="mx-auto max-w-[1400px] p-4 pb-16 lg:p-8">{children}</main>
     </div>
