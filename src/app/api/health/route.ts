@@ -8,11 +8,40 @@ export const dynamic = "force-dynamic";
  * Indique si DATABASE_URL est définie, si la base répond et si le schéma est installé.
  * Ne renvoie jamais de secret (ni URL, ni mot de passe).
  */
+/** Diagnostic Supabase Storage (photos) : n'expose jamais la clé, seulement son type et si elle est acceptée. */
+async function storageStatus(): Promise<Record<string, unknown>> {
+  const url = (process.env.SUPABASE_URL || "").trim().replace(/\/$/, "");
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+  const out: Record<string, unknown> = { url_defined: !!url, key_defined: !!key, bucket: process.env.SUPABASE_BUCKET || "jm-media", on_vercel: !!process.env.VERCEL };
+  if (url) { try { out.url_host = new URL(url).host; } catch { out.url_valid = false; } }
+  if (key) {
+    out.key_has_whitespace = key !== key.trim();
+    if (key.startsWith("sb_secret_")) out.key_type = "secret";
+    else if (key.startsWith("sb_publishable_")) out.key_type = "publishable (mauvaise clé)";
+    else {
+      try { out.key_type = JSON.parse(Buffer.from(key.split(".")[1] ?? "", "base64url").toString()).role ?? "inconnu"; } catch { out.key_type = "illisible"; }
+    }
+  }
+  if (!url || !key) out.hint = `Variable(s) manquante(s) dans ce déploiement : ${[!url && "SUPABASE_URL", !key && "SUPABASE_SERVICE_ROLE_KEY"].filter(Boolean).join(", ")}. Vérifiez le nom exact, l'environnement Production, puis faites un Redeploy.`;
+  else {
+    try {
+      const r = await fetch(`${url}/storage/v1/bucket`, { headers: { Authorization: `Bearer ${key.trim()}`, apikey: key.trim() }, signal: AbortSignal.timeout(5000) });
+      out.storage_http_status = r.status;
+      out.hint = r.ok ? "Stockage des photos opérationnel." : out.key_type === "anon" || /publishable/.test(String(out.key_type)) ? "Vous avez mis la clé « anon / publishable » : il faut la clé service_role (ou sb_secret_…)." : "Clé refusée ou URL incorrecte (Settings → API dans Supabase).";
+    } catch (e: any) {
+      out.storage_error = String(e?.message ?? e).slice(0, 120);
+      out.hint = "Supabase injoignable : vérifiez SUPABASE_URL.";
+    }
+  }
+  return out;
+}
+
 export async function GET() {
   const out: Record<string, unknown> = {
     database_url_defined: !!process.env.DATABASE_URL,
     database_ssl: process.env.DATABASE_SSL === "true",
     site_url: process.env.NEXT_PUBLIC_SITE_URL ?? null,
+    photos_storage: await storageStatus(),
   };
   const u = process.env.DATABASE_URL;
   if (u) {
